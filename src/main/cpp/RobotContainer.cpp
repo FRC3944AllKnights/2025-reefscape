@@ -62,7 +62,7 @@ RobotContainer::RobotContainer() {
   frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
   
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
-  NamedCommands::registerCommand("RaiseLevel4", std::move(autos::RaiseLevel4(&m_ElevatorSubsystem)));
+  NamedCommands::registerCommand("RaiseLevel4AndScore", std::move(autos::RaiseLevel4AndScore(&m_ElevatorSubsystem, &m_IntakeSubsystem)));
     
 
 }

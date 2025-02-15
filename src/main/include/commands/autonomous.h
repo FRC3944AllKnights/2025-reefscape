@@ -22,5 +22,6 @@
 #include "Constants.h"
 
 namespace autos {
-    frc2::CommandPtr RaiseLevel4(ElevatorSubsystem* elevator);
+    frc2::CommandPtr RaiseLevel4AndScore(ElevatorSubsystem* elevator, IntakeSubsystem* intake);
+    frc2::CommandPtr AlignChute(DriveSubsystem* drive);
 }

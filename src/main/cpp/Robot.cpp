@@ -6,8 +6,19 @@
 
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/CommandScheduler.h>
+#include <wpinet/PortForwarder.h>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+  for (int port = 5800; port <= 5809; port++)
+  {
+    wpi::PortForwarder::GetInstance().Add(port, "limelight-intake.local", port);
+	}
+  for (int port = 5810; port <= 5819; port++)
+  {
+    wpi::PortForwarder::GetInstance().Add(port, "limelight-outtake.local", port);
+	}
+    
+}
 
 /**
  * This function is called every 20 ms, no matter the mode. Use

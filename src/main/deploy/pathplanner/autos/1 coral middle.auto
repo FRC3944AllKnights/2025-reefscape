@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "RaiseLevel4"
+            "name": "RaiseLevel4AndScore"
           }
         }
       ]
