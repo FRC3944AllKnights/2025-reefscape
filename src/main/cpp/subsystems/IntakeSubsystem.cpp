@@ -22,14 +22,17 @@ void IntakeSubsystem::SetIntakeMotorSpeed(double speed) {
 }
 
 bool IntakeSubsystem::GamePieceDetected(){
+    return GamePieceDetectedBySwitch();
+    /*
     if (usingColorSensor) {
         return GamePieceDetectedByColor();
     }
     else {
         return GamePieceDetectedBySwitch();
     }
+    */
 }
-
+/*
 bool IntakeSubsystem::GamePieceDetectedByColor() {
     double confidence = 0.1;
     frc::Color detectedColor = m_colorSensor.GetColor();
@@ -49,6 +52,7 @@ bool IntakeSubsystem::GamePieceDetectedByColor() {
     return false;
     }
 }
+*/
 bool IntakeSubsystem::GamePieceDetectedBySwitch() {
     return LimitSwitch.Get();
 }

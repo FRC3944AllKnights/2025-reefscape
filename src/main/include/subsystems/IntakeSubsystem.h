@@ -20,7 +20,7 @@ public:
     bool usingColorSensor = false; // True: Color sensor. False: Limit switch(es)
 
 private:
-    bool GamePieceDetectedByColor();
+    //bool GamePieceDetectedByColor();
     bool GamePieceDetectedBySwitch();
 
     // Motor control
@@ -33,10 +33,12 @@ private:
 
     // Game piece detection
 
+    /*
     rev::ColorSensorV3 m_colorSensor{frc::I2C::Port::kOnboard};
     rev::ColorMatch m_colorMatcher;
     frc::Color kGamePiece = frc::Color(0.0, 0.0, 0.0);
     frc::Color kBackGround = frc::Color(0.99, 0.99, 0.99);
+    */
     frc::DigitalInput LimitSwitch = frc::DigitalInput(1);
    
     static constexpr int kLength = 46;
