@@ -20,7 +20,7 @@ public:
     int targetLevel = 0;
 
 private:
-    rev::spark::SparkMax m_ElevatorMotor{20, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
+    rev::spark::SparkMax m_ElevatorMotor{21, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
 
     rev::spark::SparkRelativeEncoder m_Encoder =
         m_ElevatorMotor.GetEncoder();

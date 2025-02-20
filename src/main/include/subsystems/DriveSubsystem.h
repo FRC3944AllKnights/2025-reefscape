@@ -64,6 +64,12 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void SetModuleStates(wpi::array<frc::SwerveModuleState, 4> desiredStates);
 
   /**
+   * Returns the speed of the robot.
+   *
+   * @return the robot's speed in x and y directions and angular velocity
+   */
+  frc::ChassisSpeeds GetRobotRelativeSpeeds();
+  /**
    * Returns the heading of the robot.
    *
    * @return the robot's heading in degrees, from 180 to 180
@@ -121,6 +127,9 @@ class DriveSubsystem : public frc2::SubsystemBase {
   MAXSwerveModule m_rearLeft;
   MAXSwerveModule m_frontRight;
   MAXSwerveModule m_rearRight;
+  
+  // Load the RobotConfig from the GUI settings.
+  pathplanner::RobotConfig config = pathplanner:: RobotConfig::fromGUISettings();
 
   // The gyro sensor
   // frc::ADIS16470_IMU m_gyro;

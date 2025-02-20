@@ -14,6 +14,15 @@
 
 #include <frc/SmartDashboard/SmartDashboard.h>
 
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/config/RobotConfig.h>
+#include <pathplanner/lib/controllers/PPHolonomicDriveController.h>
+#include <frc/geometry/Pose2d.h>
+#include <frc/kinematics/ChassisSpeeds.h>
+#include <frc/DriverStation.h>
+
+using namespace pathplanner;
+
 using namespace DriveConstants;
 
 DriveSubsystem::DriveSubsystem()
@@ -30,7 +39,34 @@ DriveSubsystem::DriveSubsystem()
                      GetHeading()}),
                  {m_frontLeft.GetPosition(), m_frontRight.GetPosition(),
                   m_rearLeft.GetPosition(), m_rearRight.GetPosition()},
-                 frc::Pose2d{}} {}
+                 frc::Pose2d{}} {
+
+    // Configure the AutoBuilder last
+    AutoBuilder::configure(
+        [this](){ return GetPose(); }, // Robot pose supplier
+        [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
+        [this](){ return GetRobotRelativeSpeeds();}, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        [this](auto speeds, auto feedforwards){ Drive(speeds.vx, speeds.vy, speeds.omega, false, true);}, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+        std::make_shared<PPHolonomicDriveController>( // PPHolonomicController is the built in path following controller for holonomic drive trains
+            PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
+        ),
+        config, // The robot configuration
+        []() {
+            // Boolean supplier that controls when the path will be mirrored for the red alliance
+            // This will flip the path being followed to the red side of the field.
+            // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+            auto alliance = frc::DriverStation::GetAlliance();
+            if (alliance) {
+                return alliance.value() == frc::DriverStation::Alliance::kRed;
+            }
+            return false;
+        },
+        this // Reference to this subsystem to set requirements
+    );
+
+                 }
 
 frc2::CommandPtr DriveSubsystem::setSlowFactor(double slow){
   return frc2::cmd::RunOnce([this, slow] { this->slowFactor = slow; }, {this});
@@ -167,6 +203,17 @@ void DriveSubsystem::ResetEncoders() {
 double DriveSubsystem::getNavXHeading(){
   //convert to robot reference frame and set initial offset
   return -ahrs.GetAngle() + 180.0;
+}
+
+frc::ChassisSpeeds DriveSubsystem::GetRobotRelativeSpeeds()
+{
+  std::vector<frc::SwerveModuleState> states {
+    m_frontLeft.GetState(),
+    m_rearLeft.GetState(),
+    m_frontRight.GetState(),
+    m_rearRight.GetState(),
+  };
+  return config.toChassisSpeeds(states);
 }
 
 units::degree_t DriveSubsystem::GetHeading(){
