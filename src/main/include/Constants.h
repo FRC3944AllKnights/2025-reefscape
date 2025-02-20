@@ -57,6 +57,12 @@ constexpr int kFrontLeftTurningCanId = 5;
 constexpr int kRearLeftTurningCanId = 6;
 constexpr int kFrontRightTurningCanId = 7;
 constexpr int kRearRightTurningCanId = 8;
+
+// Limelight constants
+constexpr double desiredPosYIntake = 13.0; // TODO: Tune
+constexpr double desiredPosYOuttake = 13.0; // TODO: Tune
+constexpr double desiredPosXOuttakeLeft = -10.0; // TODO: Tune
+constexpr double desiredPosXOuttakeRight = 10.0; // TODO: Tune
 }  // namespace DriveConstants
 
 namespace ModuleConstants {

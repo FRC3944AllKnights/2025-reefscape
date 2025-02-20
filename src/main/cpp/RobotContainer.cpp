@@ -13,6 +13,7 @@
 #include <frc2/command/SequentialCommandGroup.h>
 #include <frc2/command/SwerveControllerCommand.h>
 #include <frc2/command/button/JoystickButton.h>
+
 #include <units/angle.h>
 #include <units/velocity.h>
 #include <pathplanner/lib/commands/PathPlannerAuto.h>
@@ -41,14 +42,76 @@ RobotContainer::RobotContainer() {
   // Turning is controlled by the X axis of the right stick.
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
-        m_drive.Drive(
-            -units::meters_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetLeftY(), OIConstants::kDriveDeadband)},
-            -units::meters_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetLeftX(), OIConstants::kDriveDeadband)},
-            -units::radians_per_second_t{frc::ApplyDeadband(
-                m_driverController.GetRightX(), OIConstants::kDriveDeadband)},
-            true,true);
+        // Get controller inputs
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
+
+        // Check for Limelight hijacking
+        int POVReading = m_driverController.GetPOV();
+        if (POVReading == 180) {
+          // Command: Auto-align intake-side
+          double xComponent = 0.0;
+          double yComponent = 0.0;
+          double translationTheta = (isRed) ? 60 : 300;
+          if(LimelightHelpers::getTX("limelight-intake") != 0)
+          {
+              xComponent = translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*cos(DegreeToRad(translationTheta));
+              yComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*sin(DegreeToRad(translationTheta));
+          }
+          if(LimelightHelpers::getTY("limelight-intake") != 0)
+          {
+              xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYIntake)*sin(DegreeToRad(translationTheta));
+              yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYIntake)*cos(DegreeToRad(translationTheta));
+          }
+          x = xComponent;
+          y = yComponent;
+          rotationPID.EnableContinuousInput(0,360);
+          theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
+        }
+        else if (POVReading == 90 || POVReading == 135 || POVReading == 45) {
+          // Command: Auto-align outtake-side (right)
+          double xComponent = 0.0;
+          double yComponent = 0.0;
+          double translationTheta = (isRed) ? 60 : 300;
+          if(LimelightHelpers::getTX("limelight-intake") != 0)
+          {
+              xComponent = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeRight)*cos(DegreeToRad(translationTheta));
+              yComponent = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeRight)*sin(DegreeToRad(translationTheta));
+          }
+          if(LimelightHelpers::getTY("limelight-intake") != 0)
+          {
+              xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(translationTheta));
+              yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(translationTheta));
+          }
+          x = xComponent = 0.0;
+          y = yComponent = 0.0;
+          rotationPID.EnableContinuousInput(0,360);
+          theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
+        }
+        else if (POVReading == 270 || POVReading == 225 || POVReading == 315) {
+          // Command: Auto-align outtake-side (left)
+          double xComponent = 0.0;
+          double yComponent = 0.0;
+          double translationTheta = (isRed) ? 60 : 300;
+          if(LimelightHelpers::getTX("limelight-intake") != 0)
+          {
+              xComponent = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeLeft)*cos(DegreeToRad(translationTheta));
+              yComponent = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeLeft)*sin(DegreeToRad(translationTheta));
+          }
+          if(LimelightHelpers::getTY("limelight-intake") != 0)
+          {
+              xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(translationTheta));
+              yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(translationTheta));
+          }
+          x = xComponent;
+          y = yComponent;
+          rotationPID.EnableContinuousInput(0,360);
+          theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
+        }
+        
+        // Apply calculated velocities (drive)
+        m_drive.Drive(units::meters_per_second_t{x}, units::meters_per_second_t{y}, units::radians_per_second_t{theta}, true, true);
       },
       {&m_drive}));
 
