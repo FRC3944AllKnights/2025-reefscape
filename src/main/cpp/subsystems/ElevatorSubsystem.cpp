@@ -1,4 +1,5 @@
 #include "subsystems/ElevatorSubsystem.h"
+#include "subsystems/IntakeSubsystem.h"
 #include "subsystems/MAXSwerveModule.h"
 #include "Constants.h"
 #include "Configs.h"

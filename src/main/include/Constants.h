@@ -172,4 +172,5 @@ namespace ElevatorConstants{
 
     constexpr double ElevatorMaxSpeed = 1.0;
     constexpr double encoderTiers[] = {0.0, 10.0, 20.0, 30.0, 40.0, 50.0}; // TODO: Tune. Lvl 0: Minimum height, lvl 5: Maximum height
+    constexpr bool allowRaiseElevatorWithoutCoral = true;
 }

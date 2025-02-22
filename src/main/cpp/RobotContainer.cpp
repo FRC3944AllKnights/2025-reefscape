@@ -149,15 +149,34 @@ void RobotContainer::ConfigureButtonBindings() {
     // Raise elevator (simple) - right trigger
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Axis::kRightTrigger)
-        .WhileTrue(new frc2::InstantCommand([this] { m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());}))
+        .WhileTrue(new frc2::InstantCommand([this] {
+          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_IntakeSubsystem.GamePieceDetected()) {
+            m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
+          }
+        }))
         .WhileFalse(new frc2::InstantCommand([this] { m_ElevatorSubsystem.stopElevatorSimple();}));
-        //.GetRightTriggerAxis
 
-         // lower elevator (simple) - left trigger
+    // lower elevator (simple) - left trigger
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Axis::kLeftTrigger)
         .WhileTrue(new frc2::InstantCommand([this] { m_ElevatorSubsystem.lowerElevatorSimple( m_driverController.GetLeftTriggerAxis());}))
         .WhileFalse(new frc2::InstantCommand([this] { m_ElevatorSubsystem.stopElevatorSimple();}));
+    
+    // Raise elevator (tiered) - right bumper
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kRightBumper)
+        .OnTrue(new frc2::InstantCommand([this] {
+          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_IntakeSubsystem.GamePieceDetected()) {
+            m_ElevatorSubsystem.raiseElevatorTiered();
+          }
+        }));
+
+    // Lower elevator (tiered) - left bumper
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kLeftBumper)
+        .OnTrue(new frc2::InstantCommand([this] {
+          m_ElevatorSubsystem.lowerElevatorTiered();
+        }));
 }
     
 
