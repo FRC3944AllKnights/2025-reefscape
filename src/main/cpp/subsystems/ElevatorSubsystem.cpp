@@ -26,6 +26,7 @@ void ElevatorSubsystem::raiseElevatorSimple(double speed) {
         speed = 0.0;
     }
     m_LeftElevatorMotor.Set(speed * ElevatorMaxSpeed);
+    targetLevel = getLevel();
 }
 void ElevatorSubsystem::lowerElevatorSimple(double speed) {
     // Speed: [0, 1]
@@ -36,6 +37,7 @@ void ElevatorSubsystem::lowerElevatorSimple(double speed) {
         speed = 0.0;
     }
     m_LeftElevatorMotor.Set(-1.0 * speed * ElevatorMaxSpeed);
+    targetLevel = getLevel();
 }
 void ElevatorSubsystem::stopElevatorSimple() {
     m_LeftElevatorMotor.Set(0.0);
@@ -49,7 +51,7 @@ void ElevatorSubsystem::lowerElevatorTiered() {
 }
 
 int ElevatorSubsystem::getLevel() {
-// returns the level of elevator (1-4)
+// returns the level of elevator (0-5)
     double encoderPosition = this->m_Encoder.GetPosition();
     if (encoderPosition < encoderTiers[1]) {
         return 0;
@@ -82,5 +84,5 @@ void ElevatorSubsystem::setElevatorLevel(int level) {
         targetLevel = level;
     }
     double encoderPosition = encoderTiers[targetLevel];
-    this->m_ElevatorPIDController.SetReference(encoderPosition, SparkMax::ControlType::kPosition);
+    m_ElevatorPIDController.SetReference(encoderPosition, SparkMax::ControlType::kPosition);
 }
