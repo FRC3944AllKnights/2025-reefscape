@@ -20,7 +20,9 @@ public:
     IntakeSubsystem();
     void SetIntakeMotors(bool spinning);
     bool GamePieceDetected();
-    void SetColorLED(int R, int G, int B);
+    void SetColorLEDCoralDetected(int R, int G, int B);
+    void SetColorLEDIntakeTargetDetected(int R, int G, int B);
+    void SetColorLEDOuttakeTargetDetected(int R, int G, int B);
     bool usingColorSensor = false; // True: Color sensor. False: Limit switch(es)
 
 private:
@@ -51,13 +53,24 @@ private:
     */
     frc::DigitalInput LimitSwitch = frc::DigitalInput(1);
    
-    static constexpr int kLength = 46;
-// PWM port 9
+    // LEDs
+    // PWM port 9
     // Must be a PWM header, not MXP or DIO
-    frc::AddressableLED m_led{0};
-    std::array<frc::AddressableLED::LEDData, kLength>
-      m_ledBuffer;  // Reuse the buffer
-    // Store what the last hue of the first pixel is
-    int firstPixelHue = 0;
+    // Index order: OuttakeTargetDetected, IntakeTargetDetected, CoralDetected
 
+    static constexpr int startIndexLEDOuttakeTargetDetected = 0;
+    static constexpr int startIndexLEDIntakeTargetDetected = 30;
+    static constexpr int startIndexLEDCoralDetected = 60;
+    static constexpr int totalLEDLength = 90;
+
+    static const int kLengthLEDOuttakeTargetDetected = startIndexLEDIntakeTargetDetected - startIndexLEDOuttakeTargetDetected;
+    static const int kLengthLEDIntakeTargetDetected = startIndexLEDCoralDetected - startIndexLEDIntakeTargetDetected;
+    static const int kLengthLEDCoralDetected = totalLEDLength - startIndexLEDCoralDetected;
+
+    frc::AddressableLED m_led_OuttakeTargetDetected{0};
+    std::array<frc::AddressableLED::LEDData, kLengthLEDOuttakeTargetDetected> m_ledBuffer_OuttakeTargetDetected;
+    frc::AddressableLED m_led_IntakeTargetDetected{0};
+    std::array<frc::AddressableLED::LEDData, kLengthLEDIntakeTargetDetected> m_ledBuffer_IntakeTargetDetected;
+    frc::AddressableLED m_led_CoralDetected{0};
+    std::array<frc::AddressableLED::LEDData, kLengthLEDCoralDetected> m_ledBuffer_CoralDetected;
 };

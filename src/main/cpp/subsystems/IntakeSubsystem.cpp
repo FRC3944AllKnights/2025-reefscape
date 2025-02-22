@@ -24,10 +24,10 @@ void IntakeSubsystem::SetIntakeMotors(bool spinning) {
         m_LeftIntakeMotor.Set(0.0);
     }
     if(GamePieceDetected()){
-        SetColorLED (245, 157, 5);
+        SetColorLEDCoralDetected (0, 0, 255);
     }
     else {
-        SetColorLED (0, 0, 0);
+        SetColorLEDCoralDetected (0, 0, 0);
     }
 }
 
@@ -67,9 +67,22 @@ bool IntakeSubsystem::GamePieceDetectedBySwitch() {
     return LimitSwitch.Get();
 }
 
-void IntakeSubsystem::SetColorLED(int R, int G, int B){
-    for (int i = 0; i < kLength; i++) {
-        m_ledBuffer[i].SetRGB(R, G, B);
+
+void IntakeSubsystem::SetColorLEDOuttakeTargetDetected(int R, int G, int B){
+    for (int i = startIndexLEDOuttakeTargetDetected; i < startIndexLEDOuttakeTargetDetected + kLengthLEDOuttakeTargetDetected; i++) {
+        m_ledBuffer_OuttakeTargetDetected[i].SetRGB(R, G, B);
     }
-    m_led.SetData(m_ledBuffer);
+    m_led_CoralDetected.SetData(m_ledBuffer_OuttakeTargetDetected);
+}
+void IntakeSubsystem::SetColorLEDIntakeTargetDetected(int R, int G, int B){
+    for (int i = startIndexLEDIntakeTargetDetected; i < startIndexLEDIntakeTargetDetected + kLengthLEDIntakeTargetDetected; i++) {
+        m_ledBuffer_IntakeTargetDetected[i].SetRGB(R, G, B);
+    }
+    m_led_CoralDetected.SetData(m_ledBuffer_IntakeTargetDetected);
+}
+void IntakeSubsystem::SetColorLEDCoralDetected(int R, int G, int B){
+    for (int i = startIndexLEDCoralDetected; i < startIndexLEDCoralDetected + kLengthLEDCoralDetected; i++) {
+        m_ledBuffer_CoralDetected[i].SetRGB(R, G, B);
+    }
+    m_led_CoralDetected.SetData(m_ledBuffer_CoralDetected);
 }

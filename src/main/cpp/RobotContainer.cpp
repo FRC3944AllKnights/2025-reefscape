@@ -47,6 +47,20 @@ RobotContainer::RobotContainer() {
         double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
 
+        // Set Limelight LEDs
+        if (LimelightHelpers::getTV("limelight-intake") >= 1.0) { // Target detected intake-side
+          m_IntakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 255);
+        }
+        else {
+          m_IntakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 0);
+        }
+        if (LimelightHelpers::getTV("limelight-outtake") >= 1.0) { // Target detected outtake-side
+          m_IntakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 255);
+        }
+        else {
+          m_IntakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 0);
+        }
+
         // Check for Limelight hijacking
         int POVReading = m_driverController.GetPOV();
         if (POVReading == 180) {
