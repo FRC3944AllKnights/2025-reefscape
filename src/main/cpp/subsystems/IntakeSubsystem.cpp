@@ -4,21 +4,31 @@
 #include "Configs.h"
 #include <frc/SmartDashboard/SmartDashboard.h>
 
+using namespace IntakeConstants;
 
 IntakeSubsystem::IntakeSubsystem() {
-    m_IntakeMotor.Configure(Configs::IntakeConfig(),
+    m_LeftIntakeMotor.Configure(Configs::LeftIntakeConfig(),
+                            SparkBase::ResetMode::kResetSafeParameters,
+                            SparkBase::PersistMode::kPersistParameters);
+    m_RightIntakeMotor.Configure(Configs::RightIntakeConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
 }
 
-void IntakeSubsystem::SetIntakeMotorSpeed(double speed) {
-        m_IntakeMotor.Set(speed);
-        if(GamePieceDetected()){
-            SetColorLED (245, 157, 5);
-        }
-        else {
-            SetColorLED (0, 0, 0);
-        }
+void IntakeSubsystem::SetIntakeMotors(bool spinning) {
+    // spinning: true = motors moving, false = motors stopped
+    if (spinning) {
+        m_LeftIntakeMotor.Set(IntakeSpeed);
+    }
+    else {
+        m_LeftIntakeMotor.Set(0.0);
+    }
+    if(GamePieceDetected()){
+        SetColorLED (245, 157, 5);
+    }
+    else {
+        SetColorLED (0, 0, 0);
+    }
 }
 
 bool IntakeSubsystem::GamePieceDetected(){
@@ -59,10 +69,7 @@ bool IntakeSubsystem::GamePieceDetectedBySwitch() {
 
 void IntakeSubsystem::SetColorLED(int R, int G, int B){
     for (int i = 0; i < kLength; i++) {
-   m_ledBuffer[i].SetRGB(R, G, B);
+        m_ledBuffer[i].SetRGB(R, G, B);
     }
-
     m_led.SetData(m_ledBuffer);
-
-
 }

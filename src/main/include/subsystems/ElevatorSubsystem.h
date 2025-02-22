@@ -8,22 +8,29 @@
 #include <rev/SparkClosedLoopController.h>
 #include <rev/SparkRelativeEncoder.h>
 
+#include "Constants.h"
+
+using namespace ElevatorConstants;
+
 class ElevatorSubsystem : public frc2::SubsystemBase {
 public:
     ElevatorSubsystem();
     void raiseElevatorSimple(double speed);
     void lowerElevatorSimple(double speed);
+    void stopElevatorSimple();
     void raiseElevatorTiered();
     void lowerElevatorTiered();
     int getLevel();
     void setElevatorLevel(int level);
-    int targetLevel = 0;
 
 private:
-    rev::spark::SparkMax m_ElevatorMotor{21, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
+    int targetLevel = 0;
 
+    rev::spark::SparkMax m_LeftElevatorMotor{LeftElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
+    rev::spark::SparkMax m_RightElevatorMotor{RightElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
+    
     rev::spark::SparkRelativeEncoder m_Encoder =
-        m_ElevatorMotor.GetEncoder();
+        m_LeftElevatorMotor.GetEncoder();
     rev::spark::SparkClosedLoopController m_ElevatorPIDController =
-        m_ElevatorMotor.GetClosedLoopController();
+        m_LeftElevatorMotor.GetClosedLoopController();
 };

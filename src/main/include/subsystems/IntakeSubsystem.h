@@ -11,10 +11,14 @@
 #include <frc/AddressableLED.h>
 #include "frc/DigitalInput.h"
 
+#include "Constants.h"
+
+using namespace IntakeConstants;
+
 class IntakeSubsystem : public frc2::SubsystemBase {
 public:
     IntakeSubsystem();
-    void SetIntakeMotorSpeed(double speed);
+    void SetIntakeMotors(bool spinning);
     bool GamePieceDetected();
     void SetColorLED(int R, int G, int B);
     bool usingColorSensor = false; // True: Color sensor. False: Limit switch(es)
@@ -25,11 +29,17 @@ private:
 
     // Motor control
 
-    rev::spark::SparkMax m_IntakeMotor{20, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
-    rev::spark::SparkRelativeEncoder m_Encoder =
-        m_IntakeMotor.GetEncoder();
-    rev::spark::SparkClosedLoopController m_IntakePIDController =
-        m_IntakeMotor.GetClosedLoopController();
+    rev::spark::SparkMax m_LeftIntakeMotor{LeftIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkRelativeEncoder m_LeftEncoder =
+        m_LeftIntakeMotor.GetEncoder();
+    rev::spark::SparkClosedLoopController m_LeftIntakePIDController =
+        m_LeftIntakeMotor.GetClosedLoopController();
+
+    rev::spark::SparkMax m_RightIntakeMotor{RightIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkRelativeEncoder m_RightEncoder =
+        m_RightIntakeMotor.GetEncoder();
+    rev::spark::SparkClosedLoopController m_RightIntakePIDController =
+        m_RightIntakeMotor.GetClosedLoopController();
 
     // Game piece detection
 

@@ -66,46 +66,99 @@ class MAXSwerveModule {
   }
 };
 
-  static SparkMaxConfig& IntakeConfig() {
-    static SparkMaxConfig intakeConfig{};
+  static SparkMaxConfig& LeftIntakeConfig() {
+    static SparkMaxConfig leftIntakeConfig{};
 
     // Use module constants to calculate conversion factor
     double turningFactor = 2 * std::numbers::pi;
 
-    intakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+    leftIntakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
-    intakeConfig
+    leftIntakeConfig
         .absoluteEncoder
         .Inverted(false)
         .PositionConversionFactor(turningFactor)          // radians
         .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
-    intakeConfig.closedLoop
+    leftIntakeConfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);
 
-    return intakeConfig;
+    return leftIntakeConfig;
   }
-  static SparkMaxConfig& ElevatorConfig() {
-    static SparkMaxConfig elevatorConfig{};
+
+    static SparkMaxConfig& RightIntakeConfig() {
+    static SparkMaxConfig rightIntakeConfig{};
+
+    rightIntakeConfig.Follow(IntakeConstants::LeftIntakeCANID, true);
+    
+    // Copied from left elevator config - KEEP UPDATED
 
     // Use module constants to calculate conversion factor
     double turningFactor = 2 * std::numbers::pi;
 
-    elevatorConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+    rightIntakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
-    elevatorConfig
+    rightIntakeConfig
         .absoluteEncoder
         .Inverted(false)
         .PositionConversionFactor(turningFactor)          // radians
         .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
-    elevatorConfig.closedLoop
+    rightIntakeConfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);
 
-    return elevatorConfig;
+    return rightIntakeConfig;
+  }
+  
+  static SparkMaxConfig& LeftElevatorConfig() {
+    static SparkMaxConfig leftElevatorConfig{};
+
+    // Use module constants to calculate conversion factor
+    double turningFactor = 2 * std::numbers::pi;
+
+    leftElevatorConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+        .SmartCurrentLimit(20);
+    leftElevatorConfig
+        .absoluteEncoder
+        .Inverted(false)
+        .PositionConversionFactor(turningFactor)          // radians
+        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
+    leftElevatorConfig.closedLoop
+        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
+        // These are example gains you may need to them for your own robot!
+        .Pid(1, 0, 0)
+        .OutputRange(-1, 1);
+
+    return leftElevatorConfig;
+  }
+
+  static SparkMaxConfig& RightElevatorConfig() {
+    static SparkMaxConfig rightElevatorConfig{};
+    
+    rightElevatorConfig.Follow(ElevatorConstants::LeftElevatorCANID, true);
+
+    // Copied from left elevator config - KEEP UPDATED
+
+    // Use module constants to calculate conversion factor
+    double turningFactor = 2 * std::numbers::pi;
+
+    rightElevatorConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+        .SmartCurrentLimit(20);
+    rightElevatorConfig
+        .absoluteEncoder
+        .Inverted(false)
+        .PositionConversionFactor(turningFactor)          // radians
+        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
+    rightElevatorConfig.closedLoop
+        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
+        // These are example gains you may need to them for your own robot!
+        .Pid(1, 0, 0)
+        .OutputRange(-1, 1);
+
+    return rightElevatorConfig;
   }
 }  // namespace Configs

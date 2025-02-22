@@ -20,11 +20,11 @@ frc2::CommandPtr autos::RaiseLevel4AndScore(ElevatorSubsystem* elevator, IntakeS
         ).ToPtr(),
         frc2::FunctionalCommand(
             // onInit: set motor speed to 100
-            [intake] {intake->SetIntakeMotorSpeed(100);},
+            [intake] {intake->SetIntakeMotors(true);},
             // onExecute: None
             [intake] {;},
             // onEnd: None
-            [intake](bool interrupted) {intake->SetIntakeMotorSpeed(0);},
+            [intake](bool interrupted) {intake->SetIntakeMotors(false);},
             // isFinished: is the coral out of the robot?
             [intake] {return !intake->GamePieceDetected();},
             // requirements: intake

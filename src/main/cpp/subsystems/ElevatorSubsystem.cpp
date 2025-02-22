@@ -8,55 +8,61 @@ using namespace ElevatorConstants;
 
 
 ElevatorSubsystem::ElevatorSubsystem() {
-    m_ElevatorMotor.Configure(Configs::ElevatorConfig(),
+    m_LeftElevatorMotor.Configure(Configs::LeftElevatorConfig(),
+                            SparkBase::ResetMode::kResetSafeParameters,
+                            SparkBase::PersistMode::kPersistParameters);
+    m_RightElevatorMotor.Configure(Configs::RightElevatorConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
 }
 
 void ElevatorSubsystem::raiseElevatorSimple(double speed) {
-        m_ElevatorMotor.Set(speed);
+    // Speed: [0, 1]
+    if (speed > 1.0) {
+        speed = 1.0;
+    }
+    if (speed < 0.0) {
+        speed = 0.0;
+    }
+    m_LeftElevatorMotor.Set(speed * ElevatorMaxSpeed);
 }
 void ElevatorSubsystem::lowerElevatorSimple(double speed) {
-        m_ElevatorMotor.Set(speed);
+    // Speed: [0, 1]
+    if (speed > 1.0) {
+        speed = 1.0;
+    }
+    if (speed < 0.0) {
+        speed = 0.0;
+    }
+    m_LeftElevatorMotor.Set(-1.0 * speed * ElevatorMaxSpeed);
+}
+void ElevatorSubsystem::stopElevatorSimple() {
+    m_LeftElevatorMotor.Set(0.0);
 }
 
 void ElevatorSubsystem::raiseElevatorTiered() {
-    if (targetLevel >= 5) {
-        return;
-    }
-
-    targetLevel++;
-
-    double encoderPosition = ElevatorConstants::encoderTiers[targetLevel];
-    this->m_ElevatorPIDController.SetReference(encoderPosition, SparkMax::ControlType::kPosition);
+    setElevatorLevel(targetLevel + 1);
 }
 void ElevatorSubsystem::lowerElevatorTiered() {
-   if (targetLevel <= 0) {
-        return;
-    }
-
-    targetLevel--;
-
-    double encoderPosition = ElevatorConstants::encoderTiers[targetLevel];
-    this->m_ElevatorPIDController.SetReference(encoderPosition, SparkMax::ControlType::kPosition);
+    setElevatorLevel(targetLevel - 1);
 }
 
 int ElevatorSubsystem::getLevel() {
 // returns the level of elevator (1-4)
     double encoderPosition = this->m_Encoder.GetPosition();
-    if (encoderPosition < ElevatorConstants::encoderTiers[1]) {
+    if (encoderPosition < encoderTiers[1]) {
         return 0;
     }
-    else if (encoderPosition < ElevatorConstants::encoderTiers[2]) {
+    else if (encoderPosition < encoderTiers[2]) {
         return 1;
     }
-    else if (encoderPosition < ElevatorConstants::encoderTiers[3]) {
+    else if (encoderPosition < encoderTiers[3]) {
         return 2;
     }
-    else if (encoderPosition < ElevatorConstants::encoderTiers[4]) {
+    else if (encoderPosition < encoderTiers[4]) {
         return 3;
     }
-    else if (encoderPosition < ElevatorConstants::encoderTiers[5]){
+    else if (encoderPosition < encoderTiers[5]){
         return 4;
     }
     else {
@@ -65,7 +71,15 @@ int ElevatorSubsystem::getLevel() {
 }
 
 void ElevatorSubsystem::setElevatorLevel(int level) {
-    targetLevel = level;
-    double encoderPosition = ElevatorConstants::encoderTiers[targetLevel];
+    if (level > 5) {
+        targetLevel = 5;
+    }
+    else if (level < 0) {
+        targetLevel = 0;
+    }
+    else {
+        targetLevel = level;
+    }
+    double encoderPosition = encoderTiers[targetLevel];
     this->m_ElevatorPIDController.SetReference(encoderPosition, SparkMax::ControlType::kPosition);
 }
