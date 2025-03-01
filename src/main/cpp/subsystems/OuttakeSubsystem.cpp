@@ -1,27 +1,27 @@
-#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/OuttakeSubsystem.h"
 #include "subsystems/MAXSwerveModule.h"
 #include "Constants.h"
 #include "Configs.h"
 #include <frc/SmartDashboard/SmartDashboard.h>
 
-using namespace IntakeConstants;
+using namespace OuttakeConstants;
 
-IntakeSubsystem::IntakeSubsystem() {
-    m_LeftIntakeMotor.Configure(Configs::LeftIntakeConfig(),
+OuttakeSubsystem::OuttakeSubsystem() {
+    m_LeftOuttakeMotor.Configure(Configs::LeftOuttakeConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
-    m_RightIntakeMotor.Configure(Configs::RightIntakeConfig(),
+    m_RightOuttakeMotor.Configure(Configs::RightOuttakeConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
 }
 
-void IntakeSubsystem::SetIntakeMotors(bool spinning) {
+void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
     // spinning: true = motors moving, false = motors stopped
     if (spinning) {
-        m_LeftIntakeMotor.Set(IntakeSpeed);
+        m_LeftOuttakeMotor.Set(IntakeSpeed);
     }
     else {
-        m_LeftIntakeMotor.Set(0.0);
+        m_LeftOuttakeMotor.Set(0.0);
     }
     if(GamePieceDetected()){
         SetColorLEDCoralDetected (0, 0, 255);
@@ -31,7 +31,7 @@ void IntakeSubsystem::SetIntakeMotors(bool spinning) {
     }
 }
 
-bool IntakeSubsystem::GamePieceDetected(){
+bool OuttakeSubsystem::GamePieceDetected(){
     return GamePieceDetectedBySwitch();
     /*
     if (usingColorSensor) {
@@ -63,24 +63,24 @@ bool IntakeSubsystem::GamePieceDetectedByColor() {
     }
 }
 */
-bool IntakeSubsystem::GamePieceDetectedBySwitch() {
+bool OuttakeSubsystem::GamePieceDetectedBySwitch() {
     return LimitSwitch.Get();
 }
 
 
-void IntakeSubsystem::SetColorLEDOuttakeTargetDetected(int R, int G, int B){
+void OuttakeSubsystem::SetColorLEDOuttakeTargetDetected(int R, int G, int B){
     for (int i = startIndexLEDOuttakeTargetDetected; i < startIndexLEDOuttakeTargetDetected + kLengthLEDOuttakeTargetDetected; i++) {
         m_ledBuffer_OuttakeTargetDetected[i].SetRGB(R, G, B);
     }
     m_led_CoralDetected.SetData(m_ledBuffer_OuttakeTargetDetected);
 }
-void IntakeSubsystem::SetColorLEDIntakeTargetDetected(int R, int G, int B){
+void OuttakeSubsystem::SetColorLEDIntakeTargetDetected(int R, int G, int B){
     for (int i = startIndexLEDIntakeTargetDetected; i < startIndexLEDIntakeTargetDetected + kLengthLEDIntakeTargetDetected; i++) {
         m_ledBuffer_IntakeTargetDetected[i].SetRGB(R, G, B);
     }
     m_led_CoralDetected.SetData(m_ledBuffer_IntakeTargetDetected);
 }
-void IntakeSubsystem::SetColorLEDCoralDetected(int R, int G, int B){
+void OuttakeSubsystem::SetColorLEDCoralDetected(int R, int G, int B){
     for (int i = startIndexLEDCoralDetected; i < startIndexLEDCoralDetected + kLengthLEDCoralDetected; i++) {
         m_ledBuffer_CoralDetected[i].SetRGB(R, G, B);
     }

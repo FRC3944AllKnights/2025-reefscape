@@ -49,16 +49,16 @@ RobotContainer::RobotContainer() {
 
         // Set Limelight LEDs
         if (LimelightHelpers::getTV("limelight-intake") >= 1.0) { // Target detected intake-side
-          m_IntakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 255);
+          m_OuttakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 255);
         }
         else {
-          m_IntakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 0);
+          m_OuttakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 0);
         }
         if (LimelightHelpers::getTV("limelight-outtake") >= 1.0) { // Target detected outtake-side
-          m_IntakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 255);
+          m_OuttakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 255);
         }
         else {
-          m_IntakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 0);
+          m_OuttakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 0);
         }
 
         // Check for Limelight hijacking
@@ -139,16 +139,16 @@ RobotContainer::RobotContainer() {
   frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
   
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
-  NamedCommands::registerCommand("RaiseLevel4AndScore", std::move(autos::RaiseLevel4AndScore(&m_ElevatorSubsystem, &m_IntakeSubsystem)));
+  NamedCommands::registerCommand("RaiseLevel4AndScore", std::move(autos::RaiseLevel4AndScore(&m_ElevatorSubsystem, &m_OuttakeSubsystem)));
     
 
 }
 
 void RobotContainer::ConfigureButtonBindings() {
-    // Spin intake - A button
+    // Spin outtake - A button
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
-       .WhileTrue(new frc2::RunCommand([this] {m_IntakeSubsystem.SetIntakeMotors(true);})).WhileFalse(new frc2::RunCommand([this] { m_IntakeSubsystem.SetIntakeMotors(false);}));
+       .WhileTrue(new frc2::RunCommand([this] {m_OuttakeSubsystem.SetOuttakeMotors(true);})).WhileFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
 
     // Raise climber - Y button
     frc2::JoystickButton(&m_driverController,
@@ -164,7 +164,7 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Axis::kRightTrigger)
         .WhileTrue(new frc2::InstantCommand([this] {
-          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_IntakeSubsystem.GamePieceDetected()) {
+          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_OuttakeSubsystem.GamePieceDetected()) {
             m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
           }
         }))
@@ -180,7 +180,7 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kRightBumper)
         .OnTrue(new frc2::InstantCommand([this] {
-          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_IntakeSubsystem.GamePieceDetected()) {
+          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_OuttakeSubsystem.GamePieceDetected()) {
             m_ElevatorSubsystem.raiseElevatorTiered();
           }
         }));

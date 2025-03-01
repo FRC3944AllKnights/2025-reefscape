@@ -17,7 +17,7 @@
 
 #include "Constants.h"
 #include "subsystems/DriveSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/OuttakeSubsystem.h"
 #include "subsystems/ClimberSubsystem.h"
 #include "commands/autonomous.h"
 #include "subsystems/ElevatorSubsystem.h"
@@ -46,7 +46,7 @@ class RobotContainer {
 
   // The robot's subsystems
   DriveSubsystem m_drive;
-  IntakeSubsystem m_IntakeSubsystem;
+  OuttakeSubsystem m_OuttakeSubsystem;
   ClimberSubsystem m_ClimberSubsystem;
   ElevatorSubsystem m_ElevatorSubsystem;
 

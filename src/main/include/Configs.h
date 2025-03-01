@@ -66,7 +66,7 @@ class MAXSwerveModule {
   }
 };
 
-  static SparkMaxConfig& LeftIntakeConfig() {
+  static SparkMaxConfig& LeftOuttakeConfig() {
     static SparkMaxConfig leftIntakeConfig{};
 
     // Use module constants to calculate conversion factor
@@ -88,10 +88,10 @@ class MAXSwerveModule {
     return leftIntakeConfig;
   }
 
-    static SparkMaxConfig& RightIntakeConfig() {
+    static SparkMaxConfig& RightOuttakeConfig() {
     static SparkMaxConfig rightIntakeConfig{};
 
-    rightIntakeConfig.Follow(IntakeConstants::LeftIntakeCANID, true);
+    rightIntakeConfig.Follow(OuttakeConstants::LeftIntakeCANID, true);
     
     // Copied from left elevator config - KEEP UPDATED
 

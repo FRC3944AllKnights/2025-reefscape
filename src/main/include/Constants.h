@@ -156,7 +156,7 @@ namespace ClimberConstants {
 
 }
 
-namespace IntakeConstants {
+namespace OuttakeConstants {
 
     // SPARK MAX CAN IDs
     constexpr int LeftIntakeCANID = 19;

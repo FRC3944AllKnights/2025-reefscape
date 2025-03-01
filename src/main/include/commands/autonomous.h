@@ -4,7 +4,7 @@
 
 #include "subsystems/DriveSubsystem.h"
 #include "subsystems/ClimberSubsystem.h"
-#include "subsystems/IntakeSubsystem.h"
+#include "subsystems/OuttakeSubsystem.h"
 #include "subsystems/ElevatorSubsystem.h"
 
 #include "LimelightHelpers.h"
@@ -22,6 +22,6 @@
 #include "Constants.h"
 
 namespace autos {
-    frc2::CommandPtr RaiseLevel4AndScore(ElevatorSubsystem* elevator, IntakeSubsystem* intake);
+    frc2::CommandPtr RaiseLevel4AndScore(ElevatorSubsystem* elevator, OuttakeSubsystem* outtake);
     frc2::CommandPtr AlignChute(DriveSubsystem* drive);
 }

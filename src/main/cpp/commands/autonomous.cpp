@@ -4,7 +4,7 @@
 
 using namespace AutoConstants;
 
-frc2::CommandPtr autos::RaiseLevel4AndScore(ElevatorSubsystem* elevator, IntakeSubsystem* intake) {
+frc2::CommandPtr autos::RaiseLevel4AndScore(ElevatorSubsystem* elevator, OuttakeSubsystem* outtake) {
     return frc2::cmd::Sequence(
         frc2::FunctionalCommand(
             // onInit: Raise elevator to level 4
@@ -20,15 +20,15 @@ frc2::CommandPtr autos::RaiseLevel4AndScore(ElevatorSubsystem* elevator, IntakeS
         ).ToPtr(),
         frc2::FunctionalCommand(
             // onInit: set motor speed to 100
-            [intake] {intake->SetIntakeMotors(true);},
+            [outtake] {outtake->SetOuttakeMotors(true);},
             // onExecute: None
-            [intake] {;},
+            [outtake] {;},
             // onEnd: None
-            [intake](bool interrupted) {intake->SetIntakeMotors(false);},
+            [outtake](bool interrupted) {outtake->SetOuttakeMotors(false);},
             // isFinished: is the coral out of the robot?
-            [intake] {return !intake->GamePieceDetected();},
+            [outtake] {return !outtake->GamePieceDetected();},
             // requirements: intake
-            {intake}
+            {outtake}
         ).ToPtr(),
       frc2::FunctionalCommand(
             // onInit: Lower elevator to level 0

@@ -13,12 +13,12 @@
 
 #include "Constants.h"
 
-using namespace IntakeConstants;
+using namespace OuttakeConstants;
 
-class IntakeSubsystem : public frc2::SubsystemBase {
+class OuttakeSubsystem : public frc2::SubsystemBase {
 public:
-    IntakeSubsystem();
-    void SetIntakeMotors(bool spinning);
+    OuttakeSubsystem();
+    void SetOuttakeMotors(bool spinning);
     bool GamePieceDetected();
     void SetColorLEDCoralDetected(int R, int G, int B);
     void SetColorLEDIntakeTargetDetected(int R, int G, int B);
@@ -31,17 +31,17 @@ private:
 
     // Motor control
 
-    rev::spark::SparkMax m_LeftIntakeMotor{LeftIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkMax m_LeftOuttakeMotor{LeftIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
     rev::spark::SparkRelativeEncoder m_LeftEncoder =
-        m_LeftIntakeMotor.GetEncoder();
-    rev::spark::SparkClosedLoopController m_LeftIntakePIDController =
-        m_LeftIntakeMotor.GetClosedLoopController();
+        m_LeftOuttakeMotor.GetEncoder();
+    rev::spark::SparkClosedLoopController m_LeftOuttakePIDController =
+        m_LeftOuttakeMotor.GetClosedLoopController();
 
-    rev::spark::SparkMax m_RightIntakeMotor{RightIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkMax m_RightOuttakeMotor{RightIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
     rev::spark::SparkRelativeEncoder m_RightEncoder =
-        m_RightIntakeMotor.GetEncoder();
-    rev::spark::SparkClosedLoopController m_RightIntakePIDController =
-        m_RightIntakeMotor.GetClosedLoopController();
+        m_RightOuttakeMotor.GetEncoder();
+    rev::spark::SparkClosedLoopController m_RightOuttakePIDController =
+        m_RightOuttakeMotor.GetClosedLoopController();
 
     // Game piece detection
 
