@@ -45,10 +45,6 @@ frc2::CommandPtr autos::RaiseLevel4AndScore(ElevatorSubsystem* elevator, Outtake
     );
 }
 
-frc2::CommandPtr autos::AlignChute(DriveSubsystem* drive) {
-    
-    
-}
 /*
     return frc2::cmd::Sequence(
         frc2::FunctionalCommand(

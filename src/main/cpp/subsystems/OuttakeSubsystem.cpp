@@ -17,18 +17,19 @@ OuttakeSubsystem::OuttakeSubsystem() {
 
 void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
     // spinning: true = motors moving, false = motors stopped
+    frc::SmartDashboard::PutBoolean("Outtake On/Off", spinning);
     if (spinning) {
         m_LeftOuttakeMotor.Set(OuttakeSpeed);
     }
     else {
         m_LeftOuttakeMotor.Set(0.0);
     }
-    if(GamePieceDetected()){
+    /*if(GamePieceDetected()){
         SetColorLEDCoralDetected (0, 0, 255);
     }
     else {
         SetColorLEDCoralDetected (0, 0, 0);
-    }
+    }*/
 }
 
 bool OuttakeSubsystem::GamePieceDetected(){
@@ -67,7 +68,7 @@ bool OuttakeSubsystem::GamePieceDetectedBySwitch() {
     return false; //LimitSwitch.Get();
 }
 
-
+/*
 void OuttakeSubsystem::SetColorLEDOuttakeTargetDetected(int R, int G, int B){
     for (int i = startIndexLEDOuttakeTargetDetected; i < startIndexLEDOuttakeTargetDetected + kLengthLEDOuttakeTargetDetected; i++) {
         m_ledBuffer_OuttakeTargetDetected[i].SetRGB(R, G, B);
@@ -86,3 +87,4 @@ void OuttakeSubsystem::SetColorLEDCoralDetected(int R, int G, int B){
     }
     m_led_CoralDetected.SetData(m_ledBuffer_CoralDetected);
 }
+*/

@@ -58,6 +58,7 @@ private:
     // Must be a PWM header, not MXP or DIO
     // Index order: OuttakeTargetDetected, IntakeTargetDetected, CoralDetected
 
+    /*
     static constexpr int startIndexLEDOuttakeTargetDetected = 0;
     static constexpr int startIndexLEDIntakeTargetDetected = 30;
     static constexpr int startIndexLEDCoralDetected = 60;
@@ -73,4 +74,5 @@ private:
     std::array<frc::AddressableLED::LEDData, kLengthLEDIntakeTargetDetected> m_ledBuffer_IntakeTargetDetected;
     frc::AddressableLED m_led_CoralDetected{0};
     std::array<frc::AddressableLED::LEDData, kLengthLEDCoralDetected> m_ledBuffer_CoralDetected;
+    */
 };

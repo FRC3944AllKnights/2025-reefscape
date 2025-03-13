@@ -34,7 +34,7 @@ RobotContainer::RobotContainer() {
      
   // Initialize all of your commands and subsystems here
 
-  // Configure the button bindingsR
+  // Configure the button bindings
   ConfigureButtonBindings();
 
  // Set up default drive command
@@ -47,6 +47,7 @@ RobotContainer::RobotContainer() {
         double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
 
+        /*
         // Set Limelight LEDs
         if (LimelightHelpers::getTV("limelight-intake") >= 1.0) { // Target detected intake-side
           m_OuttakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 255);
@@ -123,7 +124,7 @@ RobotContainer::RobotContainer() {
           rotationPID.EnableContinuousInput(0,360);
           theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
         }
-        
+        */
         // Apply calculated velocities (drive)
         m_drive.Drive(units::meters_per_second_t{x}, units::meters_per_second_t{y}, units::radians_per_second_t{theta}, true, true);
       },
@@ -131,15 +132,15 @@ RobotContainer::RobotContainer() {
 
     
     // Build an auto chooser. This will use frc2::cmd::None() as the default option.
-  autoChooser = AutoBuilder::buildAutoChooser();
+  //autoChooser = AutoBuilder::buildAutoChooser();
 
   // Another option that allows you to specify the default auto by its name
   // autoChooser = AutoBuilder::buildAutoChooser("My Default Auto");
 
-  frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
+  //frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
   
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
-  NamedCommands::registerCommand("RaiseLevel4AndScore", std::move(autos::RaiseLevel4AndScore(&m_ElevatorSubsystem, &m_OuttakeSubsystem)));
+  //NamedCommands::registerCommand("RaiseLevel4AndScore", std::move(autos::RaiseLevel4AndScore(&m_ElevatorSubsystem, &m_OuttakeSubsystem)));
     
 
 }
