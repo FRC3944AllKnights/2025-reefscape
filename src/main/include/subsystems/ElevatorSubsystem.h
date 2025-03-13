@@ -25,12 +25,18 @@ public:
 
 private:
     int targetLevel = 0;
+    double targetHeight = 0;
 
-    rev::spark::SparkMax m_LeftElevatorMotor{LeftElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
-    rev::spark::SparkMax m_RightElevatorMotor{RightElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};  // Replace '20' with the CAN ID of the Spark MAX
-    
-    rev::spark::SparkRelativeEncoder m_Encoder =
+    rev::spark::SparkMax m_LeftElevatorMotor{LeftElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkRelativeEncoder m_LeftEncoder =
         m_LeftElevatorMotor.GetEncoder();
-    rev::spark::SparkClosedLoopController m_ElevatorPIDController =
+    rev::spark::SparkClosedLoopController m_LeftElevatorPIDController =
         m_LeftElevatorMotor.GetClosedLoopController();
+
+    rev::spark::SparkMax m_RightElevatorMotor{RightElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkRelativeEncoder m_RightEncoder =
+        m_LeftElevatorMotor.GetEncoder();
+    rev::spark::SparkClosedLoopController m_RightElevatorPIDController =
+        m_LeftElevatorMotor.GetClosedLoopController();
+    
 };

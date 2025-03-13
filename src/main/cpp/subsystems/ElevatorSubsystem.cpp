@@ -1,6 +1,4 @@
 #include "subsystems/ElevatorSubsystem.h"
-#include "subsystems/OuttakeSubsystem.h"
-#include "subsystems/MAXSwerveModule.h"
 #include "Constants.h"
 #include "Configs.h"
 #include <frc/SmartDashboard/SmartDashboard.h>
@@ -9,10 +7,10 @@ using namespace ElevatorConstants;
 
 
 ElevatorSubsystem::ElevatorSubsystem() {
-    m_LeftElevatorMotor.Configure(Configs::LeftElevatorConfig(),
+    m_LeftElevatorMotor.Configure(Configs::ElevatorSubsystem::LeftElevatorConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
-    m_RightElevatorMotor.Configure(Configs::RightElevatorConfig(),
+    m_RightElevatorMotor.Configure(Configs::ElevatorSubsystem::RightElevatorConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
 }
@@ -25,7 +23,12 @@ void ElevatorSubsystem::raiseElevatorSimple(double speed) {
     if (speed < 0.0) {
         speed = 0.0;
     }
-    m_LeftElevatorMotor.Set(speed * ElevatorMaxSpeed);
+    targetHeight += speed * ElevatorMaxSpeed;
+    if (targetHeight > encoderTiers[5]) {
+        // Set maximum height
+        targetHeight = encoderTiers[5];
+    }
+    m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kSmartMotion);
     targetLevel = getLevel();
 }
 void ElevatorSubsystem::lowerElevatorSimple(double speed) {
@@ -36,11 +39,17 @@ void ElevatorSubsystem::lowerElevatorSimple(double speed) {
     if (speed < 0.0) {
         speed = 0.0;
     }
-    m_LeftElevatorMotor.Set(-1.0 * speed * ElevatorMaxSpeed);
+    targetHeight -= speed * ElevatorMaxSpeed;
+    if (targetHeight < encoderTiers[0]) {
+        // Set minimum height
+        targetHeight = encoderTiers[0];
+    }
+    m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kSmartMotion);
     targetLevel = getLevel();
 }
 void ElevatorSubsystem::stopElevatorSimple() {
-    m_LeftElevatorMotor.Set(0.0);
+    targetHeight = m_LeftEncoder.GetPosition();
+    m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kSmartMotion);
 }
 
 void ElevatorSubsystem::raiseElevatorTiered() {
@@ -52,7 +61,7 @@ void ElevatorSubsystem::lowerElevatorTiered() {
 
 int ElevatorSubsystem::getLevel() {
 // returns the level of elevator (0-5)
-    double encoderPosition = this->m_Encoder.GetPosition();
+    double encoderPosition = m_LeftEncoder.GetPosition();
     if (encoderPosition < encoderTiers[1]) {
         return 0;
     }
@@ -83,6 +92,6 @@ void ElevatorSubsystem::setElevatorLevel(int level) {
     else {
         targetLevel = level;
     }
-    double encoderPosition = encoderTiers[targetLevel];
-    m_ElevatorPIDController.SetReference(encoderPosition, SparkMax::ControlType::kPosition);
+    targetHeight = encoderTiers[targetLevel];
+    m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kSmartMotion);
 }

@@ -31,13 +31,13 @@ private:
 
     // Motor control
 
-    rev::spark::SparkMax m_LeftOuttakeMotor{LeftIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkMax m_LeftOuttakeMotor{LeftOuttakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
     rev::spark::SparkRelativeEncoder m_LeftEncoder =
         m_LeftOuttakeMotor.GetEncoder();
     rev::spark::SparkClosedLoopController m_LeftOuttakePIDController =
         m_LeftOuttakeMotor.GetClosedLoopController();
 
-    rev::spark::SparkMax m_RightOuttakeMotor{RightIntakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
+    rev::spark::SparkMax m_RightOuttakeMotor{RightOuttakeCANID, rev::spark::SparkMax::MotorType::kBrushless};
     rev::spark::SparkRelativeEncoder m_RightEncoder =
         m_RightOuttakeMotor.GetEncoder();
     rev::spark::SparkClosedLoopController m_RightOuttakePIDController =

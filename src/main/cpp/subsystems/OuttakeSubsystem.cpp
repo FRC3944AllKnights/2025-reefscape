@@ -7,10 +7,10 @@
 using namespace OuttakeConstants;
 
 OuttakeSubsystem::OuttakeSubsystem() {
-    m_LeftOuttakeMotor.Configure(Configs::LeftOuttakeConfig(),
+    m_LeftOuttakeMotor.Configure(Configs::OuttakeSubsystem::LeftOuttakeConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
-    m_RightOuttakeMotor.Configure(Configs::RightOuttakeConfig(),
+    m_RightOuttakeMotor.Configure(Configs::OuttakeSubsystem::RightOuttakeConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
 }
@@ -18,7 +18,7 @@ OuttakeSubsystem::OuttakeSubsystem() {
 void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
     // spinning: true = motors moving, false = motors stopped
     if (spinning) {
-        m_LeftOuttakeMotor.Set(IntakeSpeed);
+        m_LeftOuttakeMotor.Set(OuttakeSpeed);
     }
     else {
         m_LeftOuttakeMotor.Set(0.0);
@@ -64,7 +64,7 @@ bool IntakeSubsystem::GamePieceDetectedByColor() {
 }
 */
 bool OuttakeSubsystem::GamePieceDetectedBySwitch() {
-    return LimitSwitch.Get();
+    return false; //LimitSwitch.Get();
 }
 
 

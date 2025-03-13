@@ -65,54 +65,59 @@ class MAXSwerveModule {
     return turningConfig;
   }
 };
-
+class OuttakeSubsystem {
+ public:
   static SparkMaxConfig& LeftOuttakeConfig() {
-    static SparkMaxConfig leftIntakeConfig{};
+    static SparkMaxConfig leftOuttakeConfig{};
 
     // Use module constants to calculate conversion factor
     double turningFactor = 2 * std::numbers::pi;
 
-    leftIntakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+    leftOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
-    leftIntakeConfig
+    leftOuttakeConfig
         .absoluteEncoder
         .Inverted(false)
         .PositionConversionFactor(turningFactor)          // radians
         .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
-    leftIntakeConfig.closedLoop
+    leftOuttakeConfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);
 
-    return leftIntakeConfig;
+    return leftOuttakeConfig;
   }
 
     static SparkMaxConfig& RightOuttakeConfig() {
-    static SparkMaxConfig rightIntakeConfig{};
+    static SparkMaxConfig rightOuttakeConfig{};
 
-    rightIntakeConfig.Follow(OuttakeConstants::LeftIntakeCANID, true);
+    rightOuttakeConfig.Follow(OuttakeConstants::LeftOuttakeCANID, true);
     
     // Copied from left elevator config - KEEP UPDATED
 
     // Use module constants to calculate conversion factor
     double turningFactor = 2 * std::numbers::pi;
 
-    rightIntakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+    rightOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
-    rightIntakeConfig
+    rightOuttakeConfig
         .absoluteEncoder
         .Inverted(false)
         .PositionConversionFactor(turningFactor)          // radians
         .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
-    rightIntakeConfig.closedLoop
+    rightOuttakeConfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);
 
-    return rightIntakeConfig;
+    return rightOuttakeConfig;
   }
+};
+
+class ElevatorSubsystem {
+ public:
   
   static SparkMaxConfig& LeftElevatorConfig() {
     static SparkMaxConfig leftElevatorConfig{};
@@ -161,4 +166,5 @@ class MAXSwerveModule {
 
     return rightElevatorConfig;
   }
+};
 }  // namespace Configs
