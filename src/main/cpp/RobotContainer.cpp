@@ -30,7 +30,10 @@ using namespace DriveConstants;
 using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
-    frc::SmartDashboard::PutData("auto modes", &m_chooser);
+  
+  m_chooser.SetDefaultOption("Drive Forward", m_DriveForward.get());
+  m_chooser.AddOption("Drive Forward And Score", m_DriveForwardAndScore.get());
+  frc::SmartDashboard::PutData("auto modes", &m_chooser);
      
   // Initialize all of your commands and subsystems here
 
@@ -47,8 +50,8 @@ RobotContainer::RobotContainer() {
         double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
 
-        /*
         // Set Limelight LEDs
+        /*
         if (LimelightHelpers::getTV("limelight-intake") >= 1.0) { // Target detected intake-side
           m_OuttakeSubsystem.SetColorLEDIntakeTargetDetected(0, 0, 255);
         }
@@ -61,6 +64,10 @@ RobotContainer::RobotContainer() {
         else {
           m_OuttakeSubsystem.SetColorLEDOuttakeTargetDetected(0, 0, 0);
         }
+        */
+        frc::SmartDashboard::PutNumber("tx", LimelightHelpers::getTX("limelight-intake"));
+        frc::SmartDashboard::PutNumber("ty", LimelightHelpers::getTY("limelight-intake"));
+
 
         // Check for Limelight hijacking
         int POVReading = m_driverController.GetPOV();
@@ -119,12 +126,12 @@ RobotContainer::RobotContainer() {
               xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(translationTheta));
               yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(translationTheta));
           }
-          x = xComponent;
-          y = yComponent;
-          rotationPID.EnableContinuousInput(0,360);
-          theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
+          //x = xComponent;
+          //y = yComponent;
+          //rotationPID.EnableContinuousInput(0,360);
+          //theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
         }
-        */
+        
         // Apply calculated velocities (drive)
         m_drive.Drive(units::meters_per_second_t{x}, units::meters_per_second_t{y}, units::radians_per_second_t{theta}, true, true);
       },
@@ -142,7 +149,21 @@ RobotContainer::RobotContainer() {
   // Register Named Commands. You must pass either a CommandPtr rvalue or a shared_ptr to the command, not the command directly.
   //NamedCommands::registerCommand("RaiseLevel4AndScore", std::move(autos::RaiseLevel4AndScore(&m_ElevatorSubsystem, &m_OuttakeSubsystem)));
     
+    m_ElevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
+      [this] {
+        // Raise elevator (simple) - right trigger
+        if (m_driverController.GetRightTriggerAxis() > 0.0) {
+          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_OuttakeSubsystem.GamePieceDetected()) {
+            m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
+          }
+        }
 
+    // lower elevator (simple) - left trigger
+        if (m_driverController.GetLeftTriggerAxis() > 0.0) {
+          m_ElevatorSubsystem.lowerElevatorSimple(m_driverController.GetLeftTriggerAxis());
+        }
+      },
+    {&m_ElevatorSubsystem}));
 }
 
 void RobotContainer::ConfigureButtonBindings() {
@@ -160,22 +181,6 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
         .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.lowerClimber();}));
-
-    // Raise elevator (simple) - right trigger
-    frc2::JoystickButton(&m_driverController,
-                        frc::XboxController::Axis::kRightTrigger)
-        .WhileTrue(new frc2::InstantCommand([this] {
-          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_OuttakeSubsystem.GamePieceDetected()) {
-            m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
-          }
-        }))
-        .WhileFalse(new frc2::InstantCommand([this] { m_ElevatorSubsystem.stopElevatorSimple();}));
-
-    // lower elevator (simple) - left trigger
-    frc2::JoystickButton(&m_driverController,
-                        frc::XboxController::Axis::kLeftTrigger)
-        .WhileTrue(new frc2::InstantCommand([this] { m_ElevatorSubsystem.lowerElevatorSimple( m_driverController.GetLeftTriggerAxis());}))
-        .WhileFalse(new frc2::InstantCommand([this] { m_ElevatorSubsystem.stopElevatorSimple();}));
     
     // Raise elevator (tiered) - right bumper
     frc2::JoystickButton(&m_driverController,
@@ -197,7 +202,7 @@ void RobotContainer::ConfigureButtonBindings() {
 
 frc2::Command* RobotContainer::getAutonomousCommand() {
   // Returns a frc2::Command* that is freed at program termination
-  return autoChooser.GetSelected();
+  return m_chooser.GetSelected();
 }
 
 double RobotContainer::DegreeToRad(double degree){

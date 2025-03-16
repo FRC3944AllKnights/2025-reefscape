@@ -17,7 +17,7 @@ OuttakeSubsystem::OuttakeSubsystem() {
 
 void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
     // spinning: true = motors moving, false = motors stopped
-    frc::SmartDashboard::PutBoolean("Outtake On/Off", spinning);
+    frc::SmartDashboard::PutBoolean("Outtake", spinning);
     if (spinning) {
         m_LeftOuttakeMotor.Set(OuttakeSpeed);
     }

@@ -52,7 +52,11 @@ class RobotContainer {
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
-  frc::SendableChooser<frc2::Command*> autoChooser;
+  //frc::SendableChooser<frc2::CommandPtr> autoChooser;
+
+
+  frc2::CommandPtr m_DriveForward = autos::DriveForward(&m_drive);
+  frc2::CommandPtr m_DriveForwardAndScore = autos::DriveForwardAndScore(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
 
   frc::PIDController translationPID{0.0125, 1.0e-3, 0.0};
   frc::PIDController rotationPID{0.01, 5.5e-3, 0.0};

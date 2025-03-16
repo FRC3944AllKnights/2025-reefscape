@@ -94,7 +94,7 @@ class OuttakeSubsystem {
 
     rightOuttakeConfig.Follow(OuttakeConstants::LeftOuttakeCANID, true);
     
-    // Copied from left elevator config - KEEP UPDATED
+    // Copied from left outtake config - KEEP UPDATED
 
     // Use module constants to calculate conversion factor
     double turningFactor = 2 * std::numbers::pi;
@@ -122,21 +122,26 @@ class ElevatorSubsystem {
   static SparkMaxConfig& LeftElevatorConfig() {
     static SparkMaxConfig leftElevatorConfig{};
 
-    // Use module constants to calculate conversion factor
-    double turningFactor = 2 * std::numbers::pi;
-
     leftElevatorConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(20);
-    leftElevatorConfig
-        .absoluteEncoder
-        .Inverted(false)
-        .PositionConversionFactor(turningFactor)          // radians
-        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
+        .SmartCurrentLimit(50);
+    //leftElevatorConfig.Inverted(true);
     leftElevatorConfig.closedLoop
-        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
+        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // These are example gains you may need to them for your own robot!
-        .Pid(1, 0, 0)
-        .OutputRange(-1, 1);
+        .P(0.1)
+        .I(0)
+        .D(0)
+        .OutputRange(-1, 1)
+        .P(0.0001, ClosedLoopSlot::kSlot1)
+        .I(0, ClosedLoopSlot::kSlot1)
+        .D(0, ClosedLoopSlot::kSlot1)
+        .VelocityFF(1.0 / 5767, ClosedLoopSlot::kSlot1)
+        .OutputRange(-1, 1, ClosedLoopSlot::kSlot1);
+    leftElevatorConfig.closedLoop
+        .maxMotion
+        .MaxVelocity(1000)
+        .MaxAcceleration(1000)
+        .AllowedClosedLoopError(1);
 
     return leftElevatorConfig;
   }
@@ -144,25 +149,9 @@ class ElevatorSubsystem {
   static SparkMaxConfig& RightElevatorConfig() {
     static SparkMaxConfig rightElevatorConfig{};
     
-    rightElevatorConfig.Follow(ElevatorConstants::LeftElevatorCANID, true);
-
-    // Copied from left elevator config - KEEP UPDATED
-
-    // Use module constants to calculate conversion factor
-    double turningFactor = 2 * std::numbers::pi;
-
     rightElevatorConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(20);
-    rightElevatorConfig
-        .absoluteEncoder
-        .Inverted(false)
-        .PositionConversionFactor(turningFactor)          // radians
-        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
-    rightElevatorConfig.closedLoop
-        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
-        // These are example gains you may need to them for your own robot!
-        .Pid(1, 0, 0)
-        .OutputRange(-1, 1);
+        .SmartCurrentLimit(50);
+    rightElevatorConfig.Follow(ElevatorConstants::LeftElevatorCANID, true);
 
     return rightElevatorConfig;
   }

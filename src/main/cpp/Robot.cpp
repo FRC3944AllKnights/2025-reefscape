@@ -8,15 +8,19 @@
 #include <frc2/command/CommandScheduler.h>
 #include <wpinet/PortForwarder.h>
 
-void Robot::RobotInit() {
-  for (int port = 5800; port <= 5809; port++)
+Robot::Robot() {
+  for (int port = 5800; port <= 5801; port++)
   {
     wpi::PortForwarder::GetInstance().Add(port, "limelight-intake.local", port);
 	}
-  for (int port = 5810; port <= 5819; port++)
+  for (int port = 5800; port <= 5801; port++)
   {
     wpi::PortForwarder::GetInstance().Add(port, "limelight-outtake.local", port);
 	}
+}
+
+void Robot::RobotInit() {
+
     
 }
 

@@ -29,7 +29,9 @@ void ElevatorSubsystem::raiseElevatorSimple(double speed) {
         targetHeight = encoderTiers[5];
     }
     m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kMAXMotionPositionControl);
-    targetLevel = getLevel();
+    resetTargetLevel();
+    frc::SmartDashboard::PutNumber("Elevator Target Level", targetLevel);
+    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[5]);
 }
 void ElevatorSubsystem::lowerElevatorSimple(double speed) {
     // Speed: [0, 1]
@@ -45,7 +47,9 @@ void ElevatorSubsystem::lowerElevatorSimple(double speed) {
         targetHeight = encoderTiers[0];
     }
     m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kMAXMotionPositionControl);
-    targetLevel = getLevel();
+    resetTargetLevel();
+    frc::SmartDashboard::PutNumber("Elevator Target Level", targetLevel);
+    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[5]);
 }
 void ElevatorSubsystem::stopElevatorSimple() {
     targetHeight = m_LeftEncoder.GetPosition();
@@ -82,8 +86,28 @@ int ElevatorSubsystem::getLevel() {
     }
 }
 
+void ElevatorSubsystem::resetTargetLevel() {
+if (targetHeight < encoderTiers[1]) {
+        targetLevel = 0;
+    }
+    else if (targetHeight < encoderTiers[2]) {
+        targetLevel = 1;
+    }
+    else if (targetHeight < encoderTiers[3]) {
+        targetLevel = 2;
+    }
+    else if (targetHeight < encoderTiers[4]) {
+        targetLevel = 3;
+    }
+    else if (targetHeight < encoderTiers[5]){
+        targetLevel = 4;
+    }
+    else {
+        targetLevel = 5;
+    }
+}
+
 void ElevatorSubsystem::setElevatorLevel(int level) {
-    frc::SmartDashboard::PutBoolean("Elevator Target Level", level);
     if (level > 5) {
         targetLevel = 5;
     }
@@ -95,4 +119,6 @@ void ElevatorSubsystem::setElevatorLevel(int level) {
     }
     targetHeight = encoderTiers[targetLevel];
     m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kMAXMotionPositionControl);
+    frc::SmartDashboard::PutNumber("Elevator Target Level", targetLevel);
+    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[5]);
 }

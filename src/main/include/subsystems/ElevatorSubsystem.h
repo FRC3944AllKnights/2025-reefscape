@@ -22,6 +22,7 @@ public:
     void lowerElevatorTiered();
     int getLevel();
     void setElevatorLevel(int level);
+    void resetTargetLevel();
 
 private:
     int targetLevel = 0;
