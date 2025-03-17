@@ -70,9 +70,6 @@ class OuttakeSubsystem {
   static SparkMaxConfig& LeftOuttakeConfig() {
     static SparkMaxConfig leftOuttakeConfig{};
 
-    // Use module constants to calculate conversion factor
-    double turningFactor = 2 * std::numbers::pi;
-
     leftOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
     leftOuttakeConfig.closedLoop
@@ -90,9 +87,6 @@ class OuttakeSubsystem {
     rightOuttakeConfig.Follow(OuttakeConstants::LeftOuttakeCANID, true);
     
     // Copied from left outtake config - KEEP UPDATED
-
-    // Use module constants to calculate conversion factor
-    double turningFactor = 2 * std::numbers::pi;
 
     rightOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);

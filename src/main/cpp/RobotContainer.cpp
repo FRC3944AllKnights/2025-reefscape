@@ -127,7 +127,7 @@ RobotContainer::RobotContainer() {
       [this] {
         // Raise elevator (simple) - right trigger
         if (m_driverController.GetRightTriggerAxis() > 0.0) {
-          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_OuttakeSubsystem.GamePieceDetected()) {
+          if (ElevatorConstants::allowRaiseElevatorWithCoral || !m_OuttakeSubsystem.GamePieceDetected()) {
             m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
           }
         }
@@ -143,7 +143,7 @@ RobotContainer::RobotContainer() {
 RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
     velocity2D velocities;
     int ID = LimelightHelpers::getFiducialID("limelight-intake");
-    double posTheta = OIConstants::coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
+    double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
     if (posTheta < 0.0) {
       posTheta += 360;
     }

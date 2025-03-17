@@ -61,12 +61,6 @@ constexpr int kRearRightTurningCanId = 8;
 // Limelight constants
 constexpr double desiredPosYIntake = 13.0; // TODO: Tune
 constexpr double desiredPosYOuttake = 13.0; // TODO: Tune
-std::map<std::string, double> coralXOffset 
-    {
-        {"LEFT", -10.0}, // TODO: Tune
-        {"RIGHT", 10.0}  // TODO: Tune
-
-    };
 }  // namespace DriveConstants
 
 namespace ModuleConstants {
@@ -150,21 +144,7 @@ namespace OIConstants {
 constexpr int kDriverControllerPort = 0;
 constexpr double kDriveDeadband = 0.05;
 
-std::map<int, double> coralAngles 
-    {
-        {18, 180.0},
-        {10, 180.0},
-        {17, 240.0},
-        {11, 240.0},
-        {22, 300.0},
-        {6, 300.0},
-        {21, 0.0},
-        {7, 0.0},
-        {20, 60.0},
-        {8, 60.0},
-        {9, 120.0},
-        {19, 120.0}
-    };
+
 constexpr double coralOffset = 0.165;
 }  // namespace OIConstants
 

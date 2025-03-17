@@ -64,5 +64,28 @@ class RobotContainer {
   frc::PIDController translationPID{0.0125, 1.0e-3, 0.0};
   frc::PIDController rotationPID{0.01, 5.5e-3, 0.0};
 
+  std::map<int, double> coralAngles 
+    {
+        {18, 180.0},
+        {10, 180.0},
+        {17, 240.0},
+        {11, 240.0},
+        {22, 300.0},
+        {6, 300.0},
+        {21, 0.0},
+        {7, 0.0},
+        {20, 60.0},
+        {8, 60.0},
+        {9, 120.0},
+        {19, 120.0}
+    };
+
+  std::map<std::string, double> coralXOffset 
+    {
+        {"LEFT", -10.0}, // TODO: Tune
+        {"RIGHT", 10.0}  // TODO: Tune
+
+    };
+
   void ConfigureButtonBindings();
 };
