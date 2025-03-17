@@ -75,13 +75,8 @@ class OuttakeSubsystem {
 
     leftOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
-    leftOuttakeConfig
-        .absoluteEncoder
-        .Inverted(false)
-        .PositionConversionFactor(turningFactor)          // radians
-        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
     leftOuttakeConfig.closedLoop
-        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
+        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);
@@ -101,13 +96,8 @@ class OuttakeSubsystem {
 
     rightOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
         .SmartCurrentLimit(20);
-    rightOuttakeConfig
-        .absoluteEncoder
-        .Inverted(false)
-        .PositionConversionFactor(turningFactor)          // radians
-        .VelocityConversionFactor(turningFactor / 60.0);  // radians per second
     rightOuttakeConfig.closedLoop
-        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kAbsoluteEncoder)
+        .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);

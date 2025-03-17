@@ -41,8 +41,11 @@ class RobotContainer {
   frc::GenericHID m_stick{OIConstants::kDriverControllerPort};
 
   // The robot's subsystems and commands are defined here...
-  bool isRed;
+  double absoluteFieldOffset;
   double DegreeToRad(double degree);
+
+  struct velocity2D {double x; double y; double theta;};
+  velocity2D SnapToCoral(std::string direction);
 
   // The robot's subsystems
   DriveSubsystem m_drive;

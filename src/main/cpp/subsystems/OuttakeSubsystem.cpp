@@ -7,6 +7,9 @@
 using namespace OuttakeConstants;
 
 OuttakeSubsystem::OuttakeSubsystem() {
+    m_colorMatcher.AddColorMatch(kGamePiece);
+    m_colorMatcher.AddColorMatch(kBackGround);
+    
     m_LeftOuttakeMotor.Configure(Configs::OuttakeSubsystem::LeftOuttakeConfig(),
                             SparkBase::ResetMode::kResetSafeParameters,
                             SparkBase::PersistMode::kPersistParameters);
@@ -24,27 +27,28 @@ void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
     else {
         m_LeftOuttakeMotor.Set(0.0);
     }
-    /*if(GamePieceDetected()){
-        SetColorLEDCoralDetected (0, 0, 255);
+    
+}
+
+void OuttakeSubsystem::IntakeCoral() {
+    if(GamePieceDetected()){
+        m_LeftOuttakeMotor.Set(OuttakeSpeed);
     }
     else {
-        SetColorLEDCoralDetected (0, 0, 0);
-    }*/
+        m_LeftOuttakeMotor.Set(0.0);
+    }
 }
 
 bool OuttakeSubsystem::GamePieceDetected(){
-    return GamePieceDetectedBySwitch();
-    /*
     if (usingColorSensor) {
         return GamePieceDetectedByColor();
     }
     else {
         return GamePieceDetectedBySwitch();
     }
-    */
 }
-/*
-bool IntakeSubsystem::GamePieceDetectedByColor() {
+
+bool OuttakeSubsystem::GamePieceDetectedByColor(){
     double confidence = 0.1;
     frc::Color detectedColor = m_colorSensor.GetColor();
     frc::SmartDashboard::PutNumber("Color R", detectedColor.red);
@@ -60,12 +64,12 @@ bool IntakeSubsystem::GamePieceDetectedByColor() {
         return true;
     }
     else {
-    return false;
+        return false;
     }
 }
-*/
+
 bool OuttakeSubsystem::GamePieceDetectedBySwitch() {
-    return false; //LimitSwitch.Get();
+    return true; //LimitSwitch.Get();
 }
 
 /*

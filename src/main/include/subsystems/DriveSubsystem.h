@@ -89,6 +89,12 @@ class DriveSubsystem : public frc2::SubsystemBase {
   void ZeroHeading();
 
   /**
+   * Sets an offset angle between the starting angle of the NavX and the angle of the field.
+   * @param offset the offset to apply. A zero offset means the front of the robot faces away from the driver station
+   */
+  void setFieldAngleOffset(double offset);
+
+  /**
    * Returns the turn rate of the robot.
    *
    * @return The turn rate of the robot, in degrees per second
@@ -134,6 +140,13 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // The gyro sensor
   // frc::ADIS16470_IMU m_gyro;
   studica::AHRS ahrs{studica::AHRS::NavXComType::kMXP_SPI};
+  double m_fieldAngleOffset = 180.0;
+
+    /**
+   * Gets the NavX heading, converted to FRC coordinates.
+   *
+   * @return The converted heading.
+   */
   double getNavXHeading();
 
   // Slew rate filter variables for controlling lateral acceleration

@@ -40,6 +40,12 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
+  absoluteFieldOffset = 180.0; //default to red alliance, assume we're facing front toward the driver station
+  if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
+  {
+    absoluteFieldOffset = 0.0;
+  }
+
  // Set up default drive command
   // The left stick controls translation of the robot.
   // Turning is controlled by the X axis of the right stick.
@@ -71,65 +77,33 @@ RobotContainer::RobotContainer() {
 
         // Check for Limelight hijacking
         int POVReading = m_driverController.GetPOV();
-        if (POVReading == 180) {
-          // Command: Auto-align intake-side
-          double xComponent = 0.0;
-          double yComponent = 0.0;
-          double translationTheta = (isRed) ? 60 : 300;
-          if(LimelightHelpers::getTX("limelight-intake") != 0)
-          {
-              xComponent = translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*cos(DegreeToRad(translationTheta));
-              yComponent = -translationPID.Calculate(LimelightHelpers::getTX(""), 0.0)*sin(DegreeToRad(translationTheta));
-          }
-          if(LimelightHelpers::getTY("limelight-intake") != 0)
-          {
-              xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYIntake)*sin(DegreeToRad(translationTheta));
-              yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYIntake)*cos(DegreeToRad(translationTheta));
-          }
-          x = xComponent;
-          y = yComponent;
-          rotationPID.EnableContinuousInput(0,360);
-          theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
-        }
-        else if (POVReading == 90 || POVReading == 135 || POVReading == 45) {
+        bool intakeButton = m_driverController.GetBButton();
+        if (POVReading == 90 || POVReading == 135 || POVReading == 45) {
           // Command: Auto-align outtake-side (right)
-          double xComponent = 0.0;
-          double yComponent = 0.0;
-          double translationTheta = (isRed) ? 60 : 300;
-          if(LimelightHelpers::getTX("limelight-intake") != 0)
-          {
-              xComponent = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeRight)*cos(DegreeToRad(translationTheta));
-              yComponent = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeRight)*sin(DegreeToRad(translationTheta));
+          if (intakeButton) {
+            rotationPID.EnableContinuousInput(0,360);
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 54);
           }
-          if(LimelightHelpers::getTY("limelight-intake") != 0)
-          {
-              xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(translationTheta));
-              yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(translationTheta));
+          else {
+            velocity2D velocities = SnapToCoral("RIGHT");
+            x = velocities.x;
+            y = velocities.y;
+            theta = velocities.theta;
           }
-          x = xComponent = 0.0;
-          y = yComponent = 0.0;
-          rotationPID.EnableContinuousInput(0,360);
-          theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
         }
+
         else if (POVReading == 270 || POVReading == 225 || POVReading == 315) {
           // Command: Auto-align outtake-side (left)
-          double xComponent = 0.0;
-          double yComponent = 0.0;
-          double translationTheta = (isRed) ? 60 : 300;
-          if(LimelightHelpers::getTX("limelight-intake") != 0)
-          {
-              xComponent = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeLeft)*cos(DegreeToRad(translationTheta));
-              yComponent = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), desiredPosXOuttakeLeft)*sin(DegreeToRad(translationTheta));
+          if (intakeButton) {
+            rotationPID.EnableContinuousInput(0,360);
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 306);
           }
-          if(LimelightHelpers::getTY("limelight-intake") != 0)
-          {
-              xComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(translationTheta));
-              yComponent += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(translationTheta));
+          else {
+            velocity2D velocities = SnapToCoral("LEFT");
+            x = velocities.x;
+            y = velocities.y;
+            theta = velocities.theta;
           }
-          //x = xComponent;
-          //y = yComponent;
-          //rotationPID.EnableContinuousInput(0,360);
-          //theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), translationTheta);
         }
         
         // Apply calculated velocities (drive)
@@ -166,11 +140,41 @@ RobotContainer::RobotContainer() {
     {&m_ElevatorSubsystem}));
 }
 
+RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
+    velocity2D velocities;
+    int ID = LimelightHelpers::getFiducialID("limelight-intake");
+    double posTheta = OIConstants::coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
+    if (posTheta < 0.0) {
+      posTheta += 360;
+    }
+
+    if(LimelightHelpers::getTX("limelight-intake") != 0)
+    {
+        velocities.x = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), coralXOffset[direction])*cos(DegreeToRad(posTheta));
+        velocities.y = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), coralXOffset[direction])*sin(DegreeToRad(posTheta));
+    }
+    if (LimelightHelpers::getTY("limelight-intake") != 0) 
+    {
+        velocities.x += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(posTheta));
+        velocities.y += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
+    }
+
+    rotationPID.EnableContinuousInput(0,360);
+    velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
+
+    return velocities;
+}
+
 void RobotContainer::ConfigureButtonBindings() {
     // Spin outtake - A button
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kA)
-       .WhileTrue(new frc2::RunCommand([this] {m_OuttakeSubsystem.SetOuttakeMotors(true);})).WhileFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
+       .WhileTrue(new frc2::RunCommand([this] {m_OuttakeSubsystem.SetOuttakeMotors(true);})).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
+
+    // Intake gamepiece - B button
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kB)
+       .WhileTrue(new frc2::RunCommand([this] {m_OuttakeSubsystem.IntakeCoral();})).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
 
     // Raise climber - Y button
     frc2::JoystickButton(&m_driverController,
@@ -186,7 +190,7 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kRightBumper)
         .OnTrue(new frc2::InstantCommand([this] {
-          if (ElevatorConstants::allowRaiseElevatorWithoutCoral || m_OuttakeSubsystem.GamePieceDetected()) {
+          if (ElevatorConstants::allowRaiseElevatorWithCoral || !m_OuttakeSubsystem.GamePieceDetected()) {
             m_ElevatorSubsystem.raiseElevatorTiered();
           }
         }));

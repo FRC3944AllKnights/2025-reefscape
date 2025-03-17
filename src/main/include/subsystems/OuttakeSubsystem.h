@@ -19,14 +19,15 @@ class OuttakeSubsystem : public frc2::SubsystemBase {
 public:
     OuttakeSubsystem();
     void SetOuttakeMotors(bool spinning);
+    void IntakeCoral();
     bool GamePieceDetected();
     void SetColorLEDCoralDetected(int R, int G, int B);
     void SetColorLEDIntakeTargetDetected(int R, int G, int B);
     void SetColorLEDOuttakeTargetDetected(int R, int G, int B);
-    bool usingColorSensor = false; // True: Color sensor. False: Limit switch(es)
+    bool usingColorSensor = true; // True: Color sensor. False: Limit switch(es)
 
 private:
-    //bool GamePieceDetectedByColor();
+    bool GamePieceDetectedByColor();
     bool GamePieceDetectedBySwitch();
 
     // Motor control
@@ -45,13 +46,10 @@ private:
 
     // Game piece detection
 
-    /*
     rev::ColorSensorV3 m_colorSensor{frc::I2C::Port::kOnboard};
     rev::ColorMatch m_colorMatcher;
     frc::Color kGamePiece = frc::Color(0.0, 0.0, 0.0);
     frc::Color kBackGround = frc::Color(0.99, 0.99, 0.99);
-    */
-    frc::DigitalInput LimitSwitch = frc::DigitalInput(1);
    
     // LEDs
     // PWM port 9

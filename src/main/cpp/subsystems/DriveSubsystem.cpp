@@ -202,7 +202,11 @@ void DriveSubsystem::ResetEncoders() {
 
 double DriveSubsystem::getNavXHeading(){
   //convert to robot reference frame and set initial offset
-  return -ahrs.GetAngle() + 180.0;
+  return -ahrs.GetAngle() + m_fieldAngleOffset;
+}
+
+void DriveSubsystem::setFieldAngleOffset(double offset){
+  m_fieldAngleOffset = offset;
 }
 
 frc::ChassisSpeeds DriveSubsystem::GetRobotRelativeSpeeds()

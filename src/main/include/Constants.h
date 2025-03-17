@@ -61,8 +61,12 @@ constexpr int kRearRightTurningCanId = 8;
 // Limelight constants
 constexpr double desiredPosYIntake = 13.0; // TODO: Tune
 constexpr double desiredPosYOuttake = 13.0; // TODO: Tune
-constexpr double desiredPosXOuttakeLeft = -10.0; // TODO: Tune
-constexpr double desiredPosXOuttakeRight = 10.0; // TODO: Tune
+std::map<std::string, double> coralXOffset 
+    {
+        {"LEFT", -10.0}, // TODO: Tune
+        {"RIGHT", 10.0}  // TODO: Tune
+
+    };
 }  // namespace DriveConstants
 
 namespace ModuleConstants {
@@ -145,6 +149,23 @@ extern const frc::TrapezoidProfile<units::radians>::Constraints
 namespace OIConstants {
 constexpr int kDriverControllerPort = 0;
 constexpr double kDriveDeadband = 0.05;
+
+std::map<int, double> coralAngles 
+    {
+        {18, 180.0},
+        {10, 180.0},
+        {17, 240.0},
+        {11, 240.0},
+        {22, 300.0},
+        {6, 300.0},
+        {21, 0.0},
+        {7, 0.0},
+        {20, 60.0},
+        {8, 60.0},
+        {9, 120.0},
+        {19, 120.0}
+    };
+constexpr double coralOffset = 0.165;
 }  // namespace OIConstants
 
 namespace ClimberConstants {
@@ -172,5 +193,5 @@ namespace ElevatorConstants{
 
     constexpr double ElevatorMaxSpeed = 0.5;
     constexpr double encoderTiers[] = {0.0, 10.0, 20.0, 30.0, 40.0, 50.0}; // TODO: Tune. Lvl 0: Minimum height, lvl 5: Maximum height
-    constexpr bool allowRaiseElevatorWithoutCoral = true;
+    constexpr bool allowRaiseElevatorWithCoral = false;
 }
