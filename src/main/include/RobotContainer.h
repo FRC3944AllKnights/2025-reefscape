@@ -61,8 +61,8 @@ class RobotContainer {
   frc2::CommandPtr m_DriveForward = autos::DriveForward(&m_drive);
   frc2::CommandPtr m_DriveForwardAndScore = autos::DriveForwardAndScore(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
 
-  frc::PIDController translationPID{0.0025, 0.0, 0.0005};
-  frc::PIDController rotationPID{0.02, 5.5e-3, 0.0};
+  frc::PIDController translationPID{0.1, 0.0, 0.0005};
+  frc::PIDController rotationPID{0.01, 0.0, 0.0005};
 
   std::map<int, double> coralAngles 
     {
@@ -88,4 +88,6 @@ class RobotContainer {
     };
 
   void ConfigureButtonBindings();
+
+  bool stupidTest = true;
 };

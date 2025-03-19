@@ -14,7 +14,7 @@ frc2::CommandPtr autos::DriveForward(DriveSubsystem* drive) {
             // onEnd: Stop driving
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward?
-            [drive] {return drive->GetPose().X() >= 2_m;},
+            [drive] {return drive->GetPose().X() >= 1_m;},
             // requirements: drive
             {drive}
         ).ToPtr()
