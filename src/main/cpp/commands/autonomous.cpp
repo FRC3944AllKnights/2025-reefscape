@@ -10,7 +10,7 @@ frc2::CommandPtr autos::DriveForward(DriveSubsystem* drive) {
             // onInit: None
             [drive] {drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});},
             // onExecute: Drive forward
-            [drive] {drive->Drive(0.25_mps, 0_mps, 0_rad_per_s, false, true);},
+            [drive] {drive->Drive(0.15_mps, 0_mps, 0_rad_per_s, false, true);},
             // onEnd: Stop driving
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward?
@@ -27,11 +27,13 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
             // onInit: None
             [drive] {drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});},
             // onExecute: Drive forward
-            [drive] {drive->Drive(0.25_mps, 0_mps, 0_rad_per_s, false, true);},
+            [drive] {drive->Drive(0.15_mps, 0_mps, 0_rad_per_s, false, true);
+            frc::SmartDashboard::PutBoolean("Driving in Auto", true);},
             // onEnd: Stop driving
-            [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
+            [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
+            frc::SmartDashboard::PutBoolean("Driving in Auto", false);},
             // isFinished: Has it driven forward?
-            [drive] {return drive->GetPose().X() >= 2_m;},
+            [drive] {return drive->GetPose().X() >= 2_m;}, // 2.235_m
             // requirements: drive
             {drive}
         ).ToPtr(),
@@ -43,7 +45,7 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
             // onEnd: None
             [elevator](bool interrupted) {;},
             // isFinished: Is elevator at level 4?
-            [elevator] {return elevator->getLevel() == 4;},
+            [elevator] {return elevator->isAtTop();},
             // requirements: elevator
             {elevator}
         ).ToPtr(),

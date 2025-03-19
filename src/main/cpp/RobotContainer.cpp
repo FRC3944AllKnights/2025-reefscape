@@ -40,10 +40,10 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
-  absoluteFieldOffset = 180.0; //default to red alliance, assume we're facing front toward the driver station
+  absoluteFieldOffset = 0.0; //default to red alliance, assume we're facing front toward the driver station
   if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
   {
-    absoluteFieldOffset = 0.0;
+    absoluteFieldOffset = 180.0;
   }
 
  // Set up default drive command
@@ -52,8 +52,8 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         // Get controller inputs
-        double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
-        double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
+        double x = frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
+        double y = frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
 
         // Set Limelight LEDs
@@ -146,22 +146,29 @@ RobotContainer::RobotContainer() {
 RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
     velocity2D velocities;
     int ID = LimelightHelpers::getFiducialID("limelight-intake");
-    double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
-    if (posTheta < 0.0) {
-      posTheta += 360;
-    }
-
-    if(LimelightHelpers::getTX("limelight-intake") != 0)
+    double posTheta = coralAngles[ID];// - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
+    
+    double allowedError = 0.50;
+    // Note: TY is in negatives, logic is backwards to positives
+    bool yGood = LimelightHelpers::getTY("limelight-intake") > -10.0 && //(desiredPosYOuttake * (1 + allowedError)) &&
+        LimelightHelpers::getTY("limelight-intake") < -6.0; //(desiredPosYOuttake * (1 - allowedError));
+    frc::SmartDashboard::PutNumber("Limelight: desiredTY", desiredPosYOuttake);
+    frc::SmartDashboard::PutBoolean("Limelight: yGood", yGood);
+    if(LimelightHelpers::getTX("limelight-intake") != 0 && yGood)
     {
-        velocities.x = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), coralXOffset[direction])*cos(DegreeToRad(posTheta));
-        velocities.y = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), coralXOffset[direction])*sin(DegreeToRad(posTheta));
+        velocities.x = translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), coralXOffset[direction])*sin(DegreeToRad(posTheta));
+        velocities.y = -translationPID.Calculate(LimelightHelpers::getTX("limelight-outtake"), coralXOffset[direction])*cos(DegreeToRad(posTheta));
     }
     if (LimelightHelpers::getTY("limelight-intake") != 0) 
     {
-        velocities.x += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(posTheta));
-        velocities.y += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
+        velocities.x += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
+        velocities.y += translationPID.Calculate(LimelightHelpers::getTY("limelight-outtake"), desiredPosYOuttake)*sin(DegreeToRad(posTheta));
     }
 
+    posTheta -= absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
+    if (posTheta < 0.0) {
+      posTheta += 360;
+    }
     rotationPID.EnableContinuousInput(0,360);
     velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
 

@@ -60,7 +60,7 @@ constexpr int kRearRightTurningCanId = 8;
 
 // Limelight constants
 constexpr double desiredPosYIntake = 13.0; // TODO: Tune
-constexpr double desiredPosYOuttake = 13.0; // TODO: Tune
+constexpr double desiredPosYOuttake = -8.0; // TODO: Tune
 }  // namespace DriveConstants
 
 namespace ModuleConstants {
@@ -162,7 +162,8 @@ namespace OuttakeConstants {
     // SPARK MAX CAN IDs
     constexpr int LeftOuttakeCANID = 19;
     constexpr int RightOuttakeCANID = 20;
-    constexpr double OuttakeSpeed = 0.075;
+    constexpr double IntakeSpeed = 0.05;
+    constexpr double OuttakeSpeed = 0.15;
 }
 
 namespace ElevatorConstants{

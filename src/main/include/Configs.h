@@ -112,19 +112,19 @@ class ElevatorSubsystem {
     leftElevatorConfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // These are example gains you may need to them for your own robot!
-        .P(0.5)
+        .P(0.75)
         .I(0)
-        .D(0.05)
+        .D(0.3)
         .OutputRange(-1, 1)
-        .P(0.0001, ClosedLoopSlot::kSlot1)
+        .P(0.001, ClosedLoopSlot::kSlot1)
         .I(0, ClosedLoopSlot::kSlot1)
         .D(0, ClosedLoopSlot::kSlot1)
         .VelocityFF(1.0 / 5767, ClosedLoopSlot::kSlot1)
         .OutputRange(-1, 1, ClosedLoopSlot::kSlot1);
     leftElevatorConfig.closedLoop
         .maxMotion
-        .MaxVelocity(1000)
-        .MaxAcceleration(1000)
+        .MaxVelocity(4000)
+        .MaxAcceleration(3000)
         .AllowedClosedLoopError(1);
 
     return leftElevatorConfig;
