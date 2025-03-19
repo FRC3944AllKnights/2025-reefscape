@@ -26,6 +26,16 @@ public:
     void setElevatorLevel(int level);
     void resetTargetLevel();
 
+    /**
+     * A software e-stop that manually sets the elevator speed to zero. Can also be used to retract it.
+     */
+    void disableElevator();
+
+    /**
+     * Sets the elevator encoders to the position naturally reached by the elevator falling while disabled. Intended to be used to recover from a brown-out condition.
+     */
+    void resetElevatorEncoder();
+
 private:
     int targetLevel = 0;
     double targetHeight = 0;

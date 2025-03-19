@@ -209,6 +209,20 @@ void RobotContainer::ConfigureButtonBindings() {
         .OnTrue(new frc2::InstantCommand([this] {
           m_ElevatorSubsystem.lowerElevatorTiered();
         }));
+
+    //e-stop elevator
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kBack)
+        .WhileTrue(new frc2::RunCommand([this] {
+          m_ElevatorSubsystem.disableElevator();
+        }));
+
+    //reset encoders after an e-stop or brown-out
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kStart)
+        .OnTrue(new frc2::InstantCommand([this] {
+          m_ElevatorSubsystem.resetElevatorEncoder();
+        }));
 }
     
 

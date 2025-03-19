@@ -149,3 +149,12 @@ void ElevatorSubsystem::setElevatorLevel(int level) {
     frc::SmartDashboard::PutNumber("Elevator Target Level", targetLevel);
     frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[5]);
 }
+
+void ElevatorSubsystem::disableElevator() {
+    m_LeftElevatorMotor.Set(0.0);
+}
+
+void ElevatorSubsystem::resetElevatorEncoder() {
+    m_LeftEncoder.SetPosition(0.25);
+    m_RightEncoder.SetPosition(0.25);
+}
