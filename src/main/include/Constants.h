@@ -162,7 +162,7 @@ namespace OuttakeConstants {
     // SPARK MAX CAN IDs
     constexpr int LeftOuttakeCANID = 19;
     constexpr int RightOuttakeCANID = 20;
-    constexpr double OuttakeSpeed = 0.25;
+    constexpr double OuttakeSpeed = 0.05;
 }
 
 namespace ElevatorConstants{
@@ -171,7 +171,7 @@ namespace ElevatorConstants{
     constexpr int LeftElevatorCANID = 21;
     constexpr int RightElevatorCANID = 22;
 
-    constexpr double ElevatorMaxSpeed = 0.5;
-    constexpr double encoderTiers[] = {0.0, 10.0, 20.0, 30.0, 40.0, 50.0}; // TODO: Tune. Lvl 0: Minimum height, lvl 5: Maximum height
-    constexpr bool allowRaiseElevatorWithCoral = false;
+    constexpr double ElevatorMaxSpeed = 0.1;
+    constexpr double encoderTiers[] = {0.0, 15.0, 27.0, 60.0, 103.0, 103.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
+    constexpr bool allowRaiseElevatorWithCoral = true;
 }

@@ -31,6 +31,7 @@ void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
 }
 
 void OuttakeSubsystem::IntakeCoral() {
+    frc::SmartDashboard::PutBoolean("GamePieceDetected", GamePieceDetected());
     if(GamePieceDetected()){
         m_LeftOuttakeMotor.Set(OuttakeSpeed);
     }
@@ -61,7 +62,8 @@ bool OuttakeSubsystem::GamePieceDetectedByColor(){
     frc::SmartDashboard::PutNumber("MATCHED B", matchedColor.blue);
 
     if (matchedColor == kGamePiece){
-        return true;
+        // Check IR sensor too
+        return (m_colorSensor.GetIR() > 10.0);
     }
     else {
         return false;

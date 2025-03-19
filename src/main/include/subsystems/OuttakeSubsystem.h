@@ -48,8 +48,8 @@ private:
 
     rev::ColorSensorV3 m_colorSensor{frc::I2C::Port::kOnboard};
     rev::ColorMatch m_colorMatcher;
-    frc::Color kGamePiece = frc::Color(0.0, 0.0, 0.0);
-    frc::Color kBackGround = frc::Color(0.99, 0.99, 0.99);
+    frc::Color kGamePiece = frc::Color(0.37, 0.47, 0.16);
+    frc::Color kBackGround = frc::Color(0.56, 0.36, 0.08);
    
     // LEDs
     // PWM port 9
