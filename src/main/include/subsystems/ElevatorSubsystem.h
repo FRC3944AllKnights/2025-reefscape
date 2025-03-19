@@ -21,6 +21,8 @@ public:
     void raiseElevatorTiered();
     void lowerElevatorTiered();
     int getLevel();
+    double getHeight();
+    bool getTargetLevel();
     void setElevatorLevel(int level);
     void resetTargetLevel();
 

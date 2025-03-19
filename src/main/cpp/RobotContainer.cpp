@@ -136,6 +136,9 @@ RobotContainer::RobotContainer() {
         if (m_driverController.GetLeftTriggerAxis() > 0.0) {
           m_ElevatorSubsystem.lowerElevatorSimple(m_driverController.GetLeftTriggerAxis());
         }
+
+        // Dashboard
+        frc::SmartDashboard::PutNumber("Elevator Encoder", m_ElevatorSubsystem.getHeight());
       },
     {&m_ElevatorSubsystem}));
 }
@@ -174,7 +177,12 @@ void RobotContainer::ConfigureButtonBindings() {
     // Intake gamepiece - B button
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
-       .WhileTrue(new frc2::RunCommand([this] {m_OuttakeSubsystem.IntakeCoral();})).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
+       .WhileTrue(new frc2::RunCommand([this] {
+        if (m_ElevatorSubsystem.getTargetLevel() != 0) {
+          m_ElevatorSubsystem.setElevatorLevel(0);
+        }
+        m_OuttakeSubsystem.IntakeCoral();
+        })).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
 
     // Raise climber - Y button
     frc2::JoystickButton(&m_driverController,

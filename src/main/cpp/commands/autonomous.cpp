@@ -37,7 +37,7 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
         ).ToPtr(),
     frc2::FunctionalCommand(
             // onInit: Raise elevator to level 4
-            [elevator] {elevator->setElevatorLevel(1);},
+            [elevator] {elevator->setElevatorLevel(4);},
             // onExecute: None
             [elevator] {;},
             // onEnd: None
@@ -48,28 +48,16 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
             {elevator}
         ).ToPtr(),
         frc2::FunctionalCommand(
-            // onInit: set motor speed to 100
+            // onInit: set outtake motors to run
             [outtake] {outtake->SetOuttakeMotors(true);},
             // onExecute: None
             [outtake] {;},
             // onEnd: None
-            [outtake](bool interrupted) {outtake->SetOuttakeMotors(false);},
+            [outtake](bool interrupted) {;},
             // isFinished: is the coral out of the robot?
-            [outtake] {return !outtake->GamePieceDetected();},
+            [outtake] {return true;},
             // requirements: intake
             {outtake}
-        ).ToPtr(),
-      frc2::FunctionalCommand(
-            // onInit: Lower elevator to level 0
-            [elevator] {elevator->setElevatorLevel(0);},
-            // onExecute: None
-            [elevator] {;},
-            // onEnd: None
-            [elevator](bool interrupted) {;},
-            // isFinished: Is elevator at level 0?
-            [elevator] {return elevator->getLevel() == 0;},
-            // requirements: elevator
-            {elevator}
         ).ToPtr()
     );
 }

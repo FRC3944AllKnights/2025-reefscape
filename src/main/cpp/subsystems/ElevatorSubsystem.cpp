@@ -60,7 +60,26 @@ void ElevatorSubsystem::raiseElevatorTiered() {
     setElevatorLevel(targetLevel + 1);
 }
 void ElevatorSubsystem::lowerElevatorTiered() {
-    setElevatorLevel(targetLevel - 1);
+    int nextLowestLevel;
+    if (targetHeight <= encoderTiers[1]) {
+        nextLowestLevel = 0;
+    }
+    else if (targetHeight <= encoderTiers[2]) {
+        nextLowestLevel = 1;
+    }
+    else if (targetHeight <= encoderTiers[3]) {
+        nextLowestLevel = 2;
+    }
+    else if (targetHeight <= encoderTiers[4]) {
+        nextLowestLevel = 3;
+    }
+    else if (targetHeight <= encoderTiers[5]){
+        nextLowestLevel = 4;
+    }
+    else {
+        nextLowestLevel = 5;
+    }
+    setElevatorLevel(nextLowestLevel);
 }
 
 int ElevatorSubsystem::getLevel() {
@@ -84,6 +103,14 @@ int ElevatorSubsystem::getLevel() {
     else {
         return 5;
     }
+}
+
+double ElevatorSubsystem::getHeight() {
+    return m_LeftEncoder.GetPosition();
+}
+
+bool ElevatorSubsystem::getTargetLevel() {
+    return targetLevel;
 }
 
 void ElevatorSubsystem::resetTargetLevel() {
