@@ -191,13 +191,8 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
         velocities.y += -yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake) *sin(DegreeToRad(posTheta));
     }
     */
-    if (LimelightHelpers::getFiducialID() != -1) {
-        rotationPID.EnableContinuousInput(0,360);
-        velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
-    }
-    else {
-      velocities.theta = 0;
-    }
+    rotationPID.EnableContinuousInput(0,360);
+    velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
     return velocities;
 }
 
