@@ -24,5 +24,6 @@
 namespace autos {
     frc2::CommandPtr DriveForward(DriveSubsystem* drive);
     frc2::CommandPtr DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubsystem* elevator, OuttakeSubsystem* outtake);
+    //frc2::CommandPtr LockOnAndScore(DriveSubsystem* drive, ElevatorSubsystem* elevator, OuttakeSubsystem* outtake);
     frc2::CommandPtr RaiseLevel4AndScore(ElevatorSubsystem* elevator, OuttakeSubsystem* outtake);
 }

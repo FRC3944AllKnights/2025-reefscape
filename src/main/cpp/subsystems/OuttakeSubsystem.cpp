@@ -33,7 +33,7 @@ void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
 void OuttakeSubsystem::IntakeCoral() {
     frc::SmartDashboard::PutBoolean("GamePieceDetected", GamePieceDetected());
     if(GamePieceDetected()){
-        m_LeftOuttakeMotor.Set(OuttakeSpeed);
+        m_LeftOuttakeMotor.Set(IntakeSpeed);
     }
     else {
         m_LeftOuttakeMotor.Set(0.0);

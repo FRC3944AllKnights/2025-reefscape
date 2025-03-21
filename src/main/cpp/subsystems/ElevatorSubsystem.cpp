@@ -109,6 +109,10 @@ double ElevatorSubsystem::getHeight() {
     return m_LeftEncoder.GetPosition();
 }
 
+bool ElevatorSubsystem::isAtTop() {
+    return getHeight() > 0.98 * encoderTiers[5];
+}
+
 int ElevatorSubsystem::getTargetLevel() {
     return targetLevel;
 }
