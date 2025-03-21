@@ -52,9 +52,9 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         // Get controller inputs
-        double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
-        double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
-        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband) * speedFactor;
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband) * speedFactor;
+        double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband) * speedFactor;
 
         // Set Limelight LEDs
         /*
@@ -84,11 +84,12 @@ RobotContainer::RobotContainer() {
             rotationPID.EnableContinuousInput(0,360);
             theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 54);
           }
-          else {
-            velocity2D velocities = SnapToCoral("RIGHT");
-            x = velocities.x;
-            y = velocities.y;
-            theta = velocities.theta;
+          // if a valid apriltag is detected, run SnapToCoral logic
+          else if (LimelightHelpers::getTV("limelight-intake")) {
+              velocity2D velocities = SnapToCoral("RIGHT");
+              x = velocities.x;
+              y = velocities.y;
+              theta = velocities.theta;
           }
         }
 
@@ -98,7 +99,7 @@ RobotContainer::RobotContainer() {
             rotationPID.EnableContinuousInput(0,360);
             theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 306);
           }
-          else {
+          else if (LimelightHelpers::getTV("limelight-intake")) {
             velocity2D velocities = SnapToCoral("LEFT");
             x = velocities.x;
             y = velocities.y;
@@ -145,6 +146,7 @@ RobotContainer::RobotContainer() {
 
 RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
     velocity2D velocities;
+    
     int ID = LimelightHelpers::getFiducialID("limelight-intake");
     double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
     if (posTheta < 0.0) {
@@ -180,6 +182,7 @@ void RobotContainer::ConfigureButtonBindings() {
        .WhileTrue(new frc2::RunCommand([this] {
         if (m_ElevatorSubsystem.getTargetLevel() != 0) {
           m_ElevatorSubsystem.setElevatorLevel(0);
+          speedFactor = 1.0;
         }
         m_OuttakeSubsystem.IntakeCoral();
         })).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
@@ -199,6 +202,7 @@ void RobotContainer::ConfigureButtonBindings() {
                         frc::XboxController::Button::kRightBumper)
         .OnTrue(new frc2::InstantCommand([this] {
           if (ElevatorConstants::allowRaiseElevatorWithCoral || !m_OuttakeSubsystem.GamePieceDetected()) {
+            speedFactor = 0.5; // set drivebase to half speed for safety and more control
             m_ElevatorSubsystem.raiseElevatorTiered();
           }
         }));
@@ -208,6 +212,9 @@ void RobotContainer::ConfigureButtonBindings() {
                         frc::XboxController::Button::kLeftBumper)
         .OnTrue(new frc2::InstantCommand([this] {
           m_ElevatorSubsystem.lowerElevatorTiered();
+          if (m_ElevatorSubsystem.getTargetLevel() == 0) {
+            speedFactor = 1.0;
+          }
         }));
 
     //e-stop elevator

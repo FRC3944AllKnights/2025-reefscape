@@ -109,7 +109,7 @@ double ElevatorSubsystem::getHeight() {
     return m_LeftEncoder.GetPosition();
 }
 
-bool ElevatorSubsystem::getTargetLevel() {
+int ElevatorSubsystem::getTargetLevel() {
     return targetLevel;
 }
 

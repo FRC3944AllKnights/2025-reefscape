@@ -87,5 +87,7 @@ class RobotContainer {
 
     };
 
+  double speedFactor = 1.0;
+
   void ConfigureButtonBindings();
 };
