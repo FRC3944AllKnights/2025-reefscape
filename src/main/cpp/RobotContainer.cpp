@@ -40,11 +40,7 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureButtonBindings();
 
-  absoluteFieldOffset = 0.0; //default to red alliance, assume we're facing front toward the driver station
-  if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
-  {
-    absoluteFieldOffset = 180.0;
-  }
+
 
  // Set up default drive command
   // The left stick controls translation of the robot.
@@ -52,8 +48,8 @@ RobotContainer::RobotContainer() {
   m_drive.SetDefaultCommand(frc2::RunCommand(
       [this] {
         // Get controller inputs
-        double x = frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
-        double y = frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
+        double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband);
+        double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband);
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband);
 
         // Set Limelight LEDs
@@ -82,7 +78,12 @@ RobotContainer::RobotContainer() {
           // Command: Auto-align outtake-side (right)
           if (intakeButton) {
             rotationPID.EnableContinuousInput(0,360);
-            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 54);
+            if (frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue) {
+              theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 54);
+            }
+            else {
+              theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 234);
+            }
           }
           else {
             velocity2D velocities = SnapToCoral("RIGHT");
@@ -96,7 +97,12 @@ RobotContainer::RobotContainer() {
           // Command: Auto-align outtake-side (left)
           if (intakeButton) {
             rotationPID.EnableContinuousInput(0,360);
-            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 306);
+            if (frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue) {
+              theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 306);
+            }
+            else {
+              theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 126);
+            }
           }
           else {
             velocity2D velocities = SnapToCoral("LEFT");
@@ -151,15 +157,12 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
     if (posTheta < 0.0) {
       posTheta += 360;
     }
-    double allowedError = 0.01;
-    // Note: TY is in negatives, logic is backwards to positives
-    double ty = LimelightHelpers::getTY("limelight-intake");
-    bool thetaGood = m_drive.GetNormalizedHeading() + 360 < (posTheta + 360) * (1 + allowedError) &&
-        m_drive.GetNormalizedHeading() + 360 > (posTheta + 360) * (1 - allowedError);
-    bool yGood = ty < desiredPosYIntake; //LimelightHelpers::getTY("limelight-intake") > -10.0 && //(desiredPosYOuttake * (1 + allowedError)) &&
-        //LimelightHelpers::getTY("limelight-intake") < -6.0; //(desiredPosYOuttake * (1 - allowedError));
-    frc::SmartDashboard::PutNumber("Limelight: desiredTY", desiredPosYOuttake);
+    double allowedError = 0.005;
+    double tolerance = 3;
+    double error = abs(posTheta - m_drive.GetNormalizedHeading());
+    bool thetaGood = error < tolerance;
     frc::SmartDashboard::PutBoolean("Limelight: thetaGood", thetaGood);
+    frc::SmartDashboard::PutNumber("Limelight Theta Error", error);
     /*
     double tx = LimelightHelpers::getTX("limelight-outtake");
     if(tx != 0 && thetaGood)
@@ -179,15 +182,20 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
         frc::SmartDashboard::PutNumber("dx", dx);
         frc::SmartDashboard::PutNumber("tx", tx);
     }
-    */
+    
     if (LimelightHelpers::getTY("limelight-intake") != 0 && thetaGood) 
     {
         velocities.x += -yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
-        //velocities.y += -translationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake)*sin(DegreeToRad(posTheta));
+        velocities.y += -yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake) *sin(DegreeToRad(posTheta));
     }
-    rotationPID.EnableContinuousInput(0,360);
-    velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
-
+    */
+    if (LimelightHelpers::getFiducialID() != -1) {
+        rotationPID.EnableContinuousInput(0,360);
+        velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
+    }
+    else {
+      velocities.theta = 0;
+    }
     return velocities;
 }
 

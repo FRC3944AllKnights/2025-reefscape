@@ -32,6 +32,7 @@
 class RobotContainer {
  public:
   RobotContainer();
+  double absoluteFieldOffset;
 
   frc2::Command* getAutonomousCommand();
 
@@ -41,7 +42,6 @@ class RobotContainer {
   frc::GenericHID m_stick{OIConstants::kDriverControllerPort};
 
   // The robot's subsystems and commands are defined here...
-  double absoluteFieldOffset;
   double DegreeToRad(double degree);
 
   struct velocity2D {double x; double y; double theta;};

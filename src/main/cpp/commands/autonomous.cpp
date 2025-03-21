@@ -33,15 +33,18 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
             frc::SmartDashboard::PutBoolean("Driving in Auto", false);},
             // isFinished: Has it driven forward?
-            [drive] {return drive->GetPose().X() >= 0.5_m;}, // 2.235_m
+            [drive] {return drive->GetPose().X() >= 2.0_m;}, // 2.032   _m
             // requirements: drive
             {drive}
         ).ToPtr(),
     frc2::FunctionalCommand(
             // onInit: Raise elevator to level 4
-            [elevator] {elevator->setElevatorLevel(4);},
+            [elevator, drive] {
+                drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
+                elevator->setElevatorLevel(4);},
             // onExecute: None
-            [elevator] {;},
+            [elevator, drive] {
+                drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // onEnd: None
             [elevator](bool interrupted) {;},
             // isFinished: Is elevator at level 4?

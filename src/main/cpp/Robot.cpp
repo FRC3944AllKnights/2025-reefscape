@@ -41,7 +41,13 @@ void Robot::RobotPeriodic() { frc2::CommandScheduler::GetInstance().Run(); }
  */
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() {
+  m_container.absoluteFieldOffset = 0.0; //default to red alliance, assume we're facing front toward the driver station
+  if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
+  {
+    m_container.absoluteFieldOffset = 180.0;
+  }
+}
 
 /**
  * This autonomous runs the autonomous command selected by your {@link
