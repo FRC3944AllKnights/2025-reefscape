@@ -41,7 +41,7 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
             // onInit: Raise elevator to level 4
             [elevator, drive] {
                 drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
-                elevator->setElevatorLevel(4);},
+                elevator->setElevatorLevel(5);},
             // onExecute: None
             [elevator, drive] {
                 drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
@@ -114,7 +114,7 @@ frc2::CommandPtr autos::RaiseLevel4AndScore(ElevatorSubsystem* elevator, Outtake
     return frc2::cmd::Sequence(
         frc2::FunctionalCommand(
             // onInit: Raise elevator to level 4
-            [elevator] {elevator->setElevatorLevel(4);},
+            [elevator] {elevator->setElevatorLevel(5);},
             // onExecute: None
             [elevator] {;},
             // onEnd: None

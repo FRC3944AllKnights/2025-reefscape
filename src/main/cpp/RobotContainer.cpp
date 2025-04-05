@@ -51,7 +51,7 @@ RobotContainer::RobotContainer() {
         double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband) * speedFactor;
         double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband) * speedFactor;
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband) * speedFactor;
-
+        frc::SmartDashboard::PutNumber("Speed Factor", speedFactor);
         // Set Limelight LEDs
         /*
         if (LimelightHelpers::getTV("limelight-intake") >= 1.0) { // Target detected intake-side
@@ -114,7 +114,12 @@ RobotContainer::RobotContainer() {
         }
         
         // Apply calculated velocities (drive)
-        m_drive.Drive(units::meters_per_second_t{x}, units::meters_per_second_t{y}, units::radians_per_second_t{theta}, true, true);
+        if (m_driverController.GetXButton()) {
+          m_drive.SetX();
+        }
+        else {
+          m_drive.Drive(units::meters_per_second_t{x}, units::meters_per_second_t{y}, units::radians_per_second_t{theta}, true, true);
+        }
       },
       {&m_drive}));
 
@@ -134,9 +139,7 @@ RobotContainer::RobotContainer() {
       [this] {
         // Raise elevator (simple) - right trigger
         if (m_driverController.GetRightTriggerAxis() > 0.0) {
-          if (ElevatorConstants::allowRaiseElevatorWithCoral || !m_OuttakeSubsystem.GamePieceDetected()) {
-            m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
-          }
+          m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
         }
 
     // lower elevator (simple) - left trigger
@@ -146,6 +149,14 @@ RobotContainer::RobotContainer() {
 
         // Dashboard
         frc::SmartDashboard::PutNumber("Elevator Encoder", m_ElevatorSubsystem.getHeight());
+
+        // Set speedFactor
+        if (m_ElevatorSubsystem.getLevel() > 1) {
+          speedFactor = 0.25;
+        }
+        else {
+          speedFactor = 1.0;
+        }
       },
     {&m_ElevatorSubsystem}));
 }
@@ -206,9 +217,9 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
        .WhileTrue(new frc2::RunCommand([this] {
-        if (m_ElevatorSubsystem.getTargetLevel() != 0) {
-          m_ElevatorSubsystem.setElevatorLevel(0);
-          speedFactor = 1.0;
+        if (m_ElevatorSubsystem.getTargetLevel() != 1) {
+          m_ElevatorSubsystem.setElevatorLevel(1);
+          //speedFactor = 1.0;
         }
         m_OuttakeSubsystem.IntakeCoral();
         })).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
@@ -228,7 +239,7 @@ void RobotContainer::ConfigureButtonBindings() {
                         frc::XboxController::Button::kRightBumper)
         .OnTrue(new frc2::InstantCommand([this] {
           if (ElevatorConstants::allowRaiseElevatorWithCoral || !m_OuttakeSubsystem.GamePieceDetected()) {
-            speedFactor = 0.5; // set drivebase to half speed for safety and more control
+            // = 0.25; // set drivebase to quarter speed for safety and more control
             m_ElevatorSubsystem.raiseElevatorTiered();
           }
         }));
@@ -238,9 +249,11 @@ void RobotContainer::ConfigureButtonBindings() {
                         frc::XboxController::Button::kLeftBumper)
         .OnTrue(new frc2::InstantCommand([this] {
           m_ElevatorSubsystem.lowerElevatorTiered();
+          /*
           if (m_ElevatorSubsystem.getTargetLevel() == 0) {
             speedFactor = 1.0;
           }
+          */
         }));
 
     //e-stop elevator
@@ -256,6 +269,13 @@ void RobotContainer::ConfigureButtonBindings() {
         .OnTrue(new frc2::InstantCommand([this] {
           m_ElevatorSubsystem.resetElevatorEncoder();
         }));
+
+    /*
+      // Set swerve to X
+    frc2::JoystickButton(&m_driverController,
+                        frc::XboxController::Button::kX)
+       .OnTrue(new frc2::RunCommand([this] {m_drive.SetX();}));
+    */
 }
     
 
