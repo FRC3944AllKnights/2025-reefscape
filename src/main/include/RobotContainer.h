@@ -57,12 +57,13 @@ class RobotContainer {
   frc::SendableChooser<frc2::Command*> m_chooser;
   //frc::SendableChooser<frc2::CommandPtr> autoChooser;
 
-
+  bool thetaGood = false; //error < tolerance;
+  double posTheta;
   frc2::CommandPtr m_DriveForward = autos::DriveForward(&m_drive);
   frc2::CommandPtr m_DriveForwardAndScore = autos::DriveForwardAndScore(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
-
-  frc::PIDController yTranslationPID{0.1, 0.0, 0.0005};
-  frc::PIDController xTranslationPID{0.1, 0.0, 0.0005};
+  
+  frc::PIDController yTranslationPID{0.06, 0.0, 0.0005};
+  frc::PIDController xTranslationPID{0.01, 0.0, 0.0005};
   frc::PIDController rotationPID{0.01, 0.0, 0.0005};
 
   std::map<int, double> coralAngles 
