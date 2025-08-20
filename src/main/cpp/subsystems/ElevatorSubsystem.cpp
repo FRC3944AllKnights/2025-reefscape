@@ -24,9 +24,9 @@ void ElevatorSubsystem::raiseElevatorSimple(double speed) {
         speed = 0.0;
     }
     targetHeight += speed * ElevatorMaxSpeed;
-    if (targetHeight > encoderTiers[6]) {
+    if (targetHeight > encoderTiers[5]) {
         // Set maximum height
-        targetHeight = encoderTiers[6];
+        targetHeight = encoderTiers[5];
     }
     m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kMAXMotionPositionControl);
     resetTargetLevel();
@@ -49,7 +49,7 @@ void ElevatorSubsystem::lowerElevatorSimple(double speed) {
     m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kMAXMotionPositionControl);
     resetTargetLevel();
     frc::SmartDashboard::PutNumber("Elevator Target Level", targetLevel);
-    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[6]);
+    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[5]);
 }
 void ElevatorSubsystem::stopElevatorSimple() {
     targetHeight = m_LeftEncoder.GetPosition();
@@ -76,12 +76,10 @@ void ElevatorSubsystem::lowerElevatorTiered() {
     else if (targetHeight <= encoderTiers[5]){
         nextLowestLevel = 4;
     }
-    else if (targetHeight <= encoderTiers[6]){
+    else {
         nextLowestLevel = 5;
     }
-    else {
-        nextLowestLevel = 6;
-    }
+  
     setElevatorLevel(nextLowestLevel);
 }
 
@@ -113,7 +111,7 @@ double ElevatorSubsystem::getHeight() {
 }
 
 bool ElevatorSubsystem::isAtTop() {
-    return getHeight() > 0.98 * encoderTiers[6];
+    return getHeight() > 0.98 * encoderTiers[5];
 }
 
 int ElevatorSubsystem::getTargetLevel() {
@@ -136,17 +134,14 @@ if (targetHeight < encoderTiers[1]) {
     else if (targetHeight < encoderTiers[5]){
         targetLevel = 4;
     }
-    else if (targetHeight < encoderTiers[6]){
-        targetLevel = 5;
-    }
     else {
-        targetLevel = 6;
+        targetLevel = 5;
     }
 }
 
 void ElevatorSubsystem::setElevatorLevel(int level) {
-    if (level > 6) {
-        targetLevel = 6;
+    if (level > 5) {
+        targetLevel = 5;
     }
     else if (level < 0) {
         targetLevel = 0;
@@ -157,7 +152,7 @@ void ElevatorSubsystem::setElevatorLevel(int level) {
     targetHeight = encoderTiers[targetLevel];
     m_LeftElevatorPIDController.SetReference(targetHeight, SparkMax::ControlType::kMAXMotionPositionControl);
     frc::SmartDashboard::PutNumber("Elevator Target Level", targetLevel);
-    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[6]);
+    frc::SmartDashboard::PutNumber("Elevator Target Height %", 100.0 * targetHeight / encoderTiers[5]);
 }
 
 void ElevatorSubsystem::disableElevator() {
