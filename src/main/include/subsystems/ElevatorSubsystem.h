@@ -26,6 +26,8 @@ public:
     int getTargetLevel();
     void setElevatorLevel(int level);
     void resetTargetLevel();
+    void setSafetyMode(bool mode);
+    bool getSafetyMode();
 
     /**
      * A software e-stop that manually sets the elevator speed to zero. Can also be used to retract it.
@@ -40,6 +42,7 @@ public:
 private:
     int targetLevel = 0;
     double targetHeight = 0;
+    bool safetyMode = true;
 
     rev::spark::SparkMax m_LeftElevatorMotor{LeftElevatorCANID, rev::spark::SparkMax::MotorType::kBrushless};
     rev::spark::SparkRelativeEncoder m_LeftEncoder =

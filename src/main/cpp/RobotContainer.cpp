@@ -154,7 +154,7 @@ RobotContainer::RobotContainer() {
     m_ElevatorSubsystem.SetDefaultCommand(frc2::RunCommand(
       [this] {
         // Raise elevator (simple) - right trigger
-        if (m_driverController.GetRightTriggerAxis() > 0.0) {
+        if (m_driverController.GetRightTriggerAxis() > 0.0 && m_ElevatorSubsystem.getSafetyMode()) {
           m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
         }
 
@@ -230,7 +230,10 @@ void RobotContainer::ConfigureButtonBindings() {
     // Raise climber - Y button
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kY)
-        .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.raiseClimber();}));
+        .WhileTrue(new frc2::InstantCommand([this] {m_ElevatorSubsystem.setSafetyMode(false);
+          frc::SmartDashboard::PutBoolean("Safety Mode", false);}))
+        .WhileFalse(new frc2::InstantCommand([this] {m_ElevatorSubsystem.setSafetyMode(true);
+          frc::SmartDashboard::PutBoolean("Safety Mode", true);}));
 
     //Lower climber - X button
     frc2::JoystickButton(&m_driverController,
@@ -241,7 +244,7 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kRightBumper)
         .OnTrue(new frc2::InstantCommand([this] {
-          if (ElevatorConstants::allowRaiseElevatorWithCoral || !m_OuttakeSubsystem.GamePieceDetected()) {
+          if (!m_ElevatorSubsystem.getSafetyMode() || !m_OuttakeSubsystem.GamePieceDetected()) {
             // = 0.25; // set drivebase to quarter speed for safety and more control
             m_ElevatorSubsystem.raiseElevatorTiered();
           }

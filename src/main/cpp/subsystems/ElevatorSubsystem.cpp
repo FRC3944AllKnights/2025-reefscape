@@ -168,3 +168,12 @@ void ElevatorSubsystem::resetElevatorEncoder() {
     m_LeftEncoder.SetPosition(0.25);
     m_RightEncoder.SetPosition(0.25);
 }
+
+void ElevatorSubsystem::setSafetyMode(bool mode) {
+    this->safetyMode = mode;
+    frc::SmartDashboard::PutBoolean("Safety Mode", mode);
+}
+
+bool ElevatorSubsystem::getSafetyMode() {
+    return this->safetyMode;
+}

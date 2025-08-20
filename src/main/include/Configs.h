@@ -113,7 +113,7 @@ class ElevatorSubsystem {
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // These are example gains you may need to them for your own robot!
         .P(0.75)
-        .I(0.0)
+        .I(0.0) // Careful of instability (0.1 is BAD)
         .D(0.3)
         .OutputRange(-1, 1)
         .P(0.001, ClosedLoopSlot::kSlot1)
