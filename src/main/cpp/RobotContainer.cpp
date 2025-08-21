@@ -155,13 +155,13 @@ RobotContainer::RobotContainer() {
       [this] {
         // Raise elevator (simple) - right trigger
         // If game piece detected don't raise unless safety mode = True
-        if (m_driverController.GetRightTriggerAxis() > 0.0 && (!m_OuttakeSubsystem.GamePieceDetected() || (m_OuttakeSubsystem.GamePieceDetected() && !m_ElevatorSubsystem.getSafetyMode()))) {
+        if (m_driverController.GetRightTriggerAxis() > 0.0 && (!m_OuttakeSubsystem.GamePieceDetected() || !m_ElevatorSubsystem.getSafetyMode())) {
           m_ElevatorSubsystem.raiseElevatorSimple(m_driverController.GetRightTriggerAxis());
         }
 
     // lower elevator (simple) - left trigger
     // If game piece detected don't lower unless safety mode = True
-        if (m_driverController.GetLeftTriggerAxis() > 0.0 && (!m_OuttakeSubsystem.GamePieceDetected() || (m_OuttakeSubsystem.GamePieceDetected() && !m_ElevatorSubsystem.getSafetyMode()))) {
+        if (m_driverController.GetLeftTriggerAxis() > 0.0 && (!m_OuttakeSubsystem.GamePieceDetected() || !m_ElevatorSubsystem.getSafetyMode())) {
           m_ElevatorSubsystem.lowerElevatorSimple(m_driverController.GetLeftTriggerAxis());
         }
 
@@ -169,7 +169,7 @@ RobotContainer::RobotContainer() {
         frc::SmartDashboard::PutNumber("Elevator Encoder", m_ElevatorSubsystem.getHeight());
 
         // Set speedFactor
-        if (m_ElevatorSubsystem.getLevel() > 1) {
+        if (m_ElevatorSubsystem.getLevel() > 1 && !m_ElevatorSubsystem.getSafetyMode()) {
           speedFactor = 0.25;
         }
         else {
