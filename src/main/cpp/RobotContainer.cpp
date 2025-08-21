@@ -169,7 +169,7 @@ RobotContainer::RobotContainer() {
         frc::SmartDashboard::PutNumber("Elevator Encoder", m_ElevatorSubsystem.getHeight());
 
         // Set speedFactor
-        if (m_ElevatorSubsystem.getLevel() > 1 && !m_ElevatorSubsystem.getSafetyMode()) {
+        if (m_ElevatorSubsystem.getLevel() > 0 && m_ElevatorSubsystem.getSafetyMode()) {
           speedFactor = 0.25;
         }
         else {
@@ -222,9 +222,10 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kB)
        .WhileTrue(new frc2::RunCommand([this] {
-        if (m_ElevatorSubsystem.getTargetLevel() != 1) {
-          m_ElevatorSubsystem.setElevatorLevel(1);
-          //speedFactor = 1.0;
+        if (m_ElevatorSubsystem.getTargetLevel() != 0) {
+          if (!m_OuttakeSubsystem.GamePieceDetected() || m_ElevatorSubsystem.getSafetyMode()) {
+            m_ElevatorSubsystem.setElevatorLevel(0);
+          }
         }
         m_OuttakeSubsystem.IntakeCoral();
         })).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
@@ -241,7 +242,7 @@ void RobotContainer::ConfigureButtonBindings() {
     //Lower climber - X button
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
-        .OnTrue(new frc2::InstantCommand([this] { m_ClimberSubsystem.lowerClimber();}));
+        .OnTrue(new frc2::InstantCommand([this] { m_drive.SetX();}));
     
     // Raise elevator (tiered) - right bumper
     frc2::JoystickButton(&m_driverController,
@@ -257,7 +258,10 @@ void RobotContainer::ConfigureButtonBindings() {
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kLeftBumper)
         .OnTrue(new frc2::InstantCommand([this] {
-          m_ElevatorSubsystem.lowerElevatorTiered();
+          
+          if (!m_ElevatorSubsystem.getSafetyMode() || !m_OuttakeSubsystem.GamePieceDetected()) {
+            m_ElevatorSubsystem.lowerElevatorTiered();
+          }
           /*
           if (m_ElevatorSubsystem.getTargetLevel() == 0) {
             speedFactor = 1.0;

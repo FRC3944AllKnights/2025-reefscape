@@ -64,7 +64,7 @@ bool OuttakeSubsystem::GamePieceDetectedByColor(){
     if (matchedColor == kGamePiece){
         // Check IR sensor too
         frc::SmartDashboard::PutNumber("IR Sensor", m_colorSensor.GetIR());
-        return (m_colorSensor.GetIR() > 10.0);
+        return (m_colorSensor.GetIR() > 25.5);
     }
     else {
         return false;
