@@ -84,8 +84,8 @@ class RobotContainer {
 
   std::map<std::string, double> coralXOffset 
     {
-        {"LEFT", 0.0}, // TODO: Tune
-        {"RIGHT", 0.0}  // TODO: Tune
+        {"LEFT", 12.5}, // TODO: Tune
+        {"RIGHT", -12.5}  // TODO: Tune
 
     };
 

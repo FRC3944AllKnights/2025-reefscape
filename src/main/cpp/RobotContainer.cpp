@@ -186,20 +186,6 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
       return velocities;
     }
     
-    /* int ID = LimelightHelpers::getFiducialID("limelight-intake");
-    double posTheta = coralAngles[ID];// - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
-    posTheta -= absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
-    if (posTheta < 0.0) {
-      posTheta += 360;
-    }
-    double allowedError = 0.005;
-    double tolerance = 3;
-    double error = abs(posTheta - m_drive.GetNormalizedHeading());
-     bool thetaGood = error < tolerance; 
-    frc::SmartDashboard::PutBoolean("Limelight: thetaGood", thetaGood);
-    frc::SmartDashboard::PutNumber("Limelight Theta Error", error);
-    */
-    
     stupidTest = !stupidTest;
     frc::SmartDashboard::PutBoolean("StupidTest", stupidTest);
     velocities.x += xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * sin(DegreeToRad(posTheta));
@@ -230,7 +216,7 @@ void RobotContainer::ConfigureButtonBindings() {
         m_OuttakeSubsystem.IntakeCoral();
         })).OnFalse(new frc2::RunCommand([this] { m_OuttakeSubsystem.SetOuttakeMotors(false);}));
 
-    // Raise climber - Y button
+    // Leave safety mode - Y button
  
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kY)
@@ -240,10 +226,12 @@ void RobotContainer::ConfigureButtonBindings() {
           frc::SmartDashboard::PutBoolean("Safety Mode", true);}));
 
     //Lower climber - X button
+    /*
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kX)
         .OnTrue(new frc2::InstantCommand([this] { m_drive.SetX();}));
-    
+    */
+   
     // Raise elevator (tiered) - right bumper
     frc2::JoystickButton(&m_driverController,
                         frc::XboxController::Button::kRightBumper)
