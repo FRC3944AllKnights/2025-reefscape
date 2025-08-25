@@ -21,6 +21,8 @@
 #include <frc/kinematics/ChassisSpeeds.h>
 #include <frc/DriverStation.h>
 
+#include "LimelightHelpers.h"
+
 using namespace pathplanner;
 
 using namespace DriveConstants;
@@ -251,3 +253,47 @@ void DriveSubsystem::ResetOdometry(frc::Pose2d pose) {
       pose);
 }
 
+DriveSubsystem::velocity2D DriveSubsystem::SnapToCoral(std::string direction) {
+    velocity2D velocities;
+
+    if (LimelightHelpers::getTV("limelight-intake") == 0) {
+      return velocities;
+    }
+
+    int ID = LimelightHelpers::getFiducialID("limelight-intake");
+    double absoluteFieldOffset = 180.0; // TODO: Set absolute field offset
+    double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
+    if (posTheta < 0.0) {
+      posTheta += 360;
+    }
+    
+    velocities.x += -xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * sin(DegreeToRad(posTheta));
+    velocities.y += -xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * cos(DegreeToRad(posTheta));
+    velocities.x += yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
+    velocities.y += yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake) *sin(DegreeToRad(posTheta));
+    rotationPID.EnableContinuousInput(0,360);
+    velocities.theta = rotationPID.Calculate(GetNormalizedHeading(), posTheta);
+    
+    return velocities;
+}
+
+bool DriveSubsystem::isSnappedToCoral(std::string direction) {
+  // Returns whether x, y, and theta errors are < 3%
+
+  int ID = LimelightHelpers::getFiducialID("limelight-intake");
+    double absoluteFieldOffset = 0.0; // TODO: Set absolute field offset
+    double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
+    if (posTheta < 0.0) {
+      posTheta += 360;
+    }
+  
+  double errorX = abs((LimelightHelpers::getTX("limelight-intake") - coralXOffset[direction]) / coralXOffset[direction]);
+  double errorY = abs((LimelightHelpers::getTY("limelight-intake") - desiredPosYOuttake) / desiredPosYOuttake);
+  //double errorTheta = abs((GetNormalizedHeading() - posTheta)) / posTheta;
+
+  return (errorX < 0.1 && errorY < 0.1);// && errorTheta < 0.1);
+}
+
+double DriveSubsystem::DegreeToRad(double degree){
+    return degree*3.14159/180;
+}

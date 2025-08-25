@@ -72,12 +72,19 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
         frc2::FunctionalCommand(
             // onInit: None
             [drive] {drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});},
-            // onExecute: Drive forward
-            [drive] {;},
+            // onExecute: Auto align to coral
+            [drive] {
+                DriveSubsystem::velocity2D velocities = drive->SnapToCoral("RIGHT");
+                drive->Drive(
+                    units::velocity::meters_per_second_t {velocities.x},
+                    units::velocity::meters_per_second_t {velocities.y},
+                    units::radians_per_second_t {velocities.theta},
+                    false, true);
+                },
             // onEnd: Stop driving
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward?
-            [drive] {return drive->GetPose().X() >= 2.0_m;}, // 2.032   _m
+            [drive] {return drive->isSnappedToCoral("RIGHT");},
             // requirements: drive
             {drive}
         ).ToPtr(),

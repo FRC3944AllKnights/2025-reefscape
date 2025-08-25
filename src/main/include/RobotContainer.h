@@ -61,9 +61,10 @@ class RobotContainer {
   double posTheta;
   frc2::CommandPtr m_DriveForward = autos::DriveForward(&m_drive);
   frc2::CommandPtr m_DriveForwardAndScore = autos::DriveForwardAndScore(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
-  
-  frc::PIDController yTranslationPID{0.06, 0.0, 0.0005};
-  frc::PIDController xTranslationPID{0.01, 0.0, 0.0005};
+  frc2::CommandPtr m_OneCoralCenterAutomatic = autos::OneCoralCenterAutomatic(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
+
+  frc::PIDController yTranslationPID{0.03, 0.0, 0.0005};
+  frc::PIDController xTranslationPID{0.005, 0.0, 0.0005};
   frc::PIDController rotationPID{0.01, 0.0, 0.0005};
 
   std::map<int, double> coralAngles 

@@ -33,6 +33,7 @@ RobotContainer::RobotContainer() {
   
   m_chooser.SetDefaultOption("Drive Forward", m_DriveForward.get());
   m_chooser.AddOption("Drive Forward And Score", m_DriveForwardAndScore.get());
+  m_chooser.AddOption("One Coral Center Automatic", m_OneCoralCenterAutomatic.get());
   frc::SmartDashboard::PutData("auto modes", &m_chooser);
      
   // Initialize all of your commands and subsystems here
@@ -186,8 +187,6 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
       return velocities;
     }
     
-    stupidTest = !stupidTest;
-    frc::SmartDashboard::PutBoolean("StupidTest", stupidTest);
     velocities.x += xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * sin(DegreeToRad(posTheta));
     velocities.y += xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * cos(DegreeToRad(posTheta));
     velocities.x += -yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));

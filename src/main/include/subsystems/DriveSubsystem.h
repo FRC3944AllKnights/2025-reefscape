@@ -14,6 +14,7 @@
 #include <frc/kinematics/SwerveDriveOdometry.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/Commands.h>
+#include <frc/controller/PIDController.h>
 
 #include "Constants.h"
 #include "MAXSwerveModule.h"
@@ -125,6 +126,13 @@ class DriveSubsystem : public frc2::SubsystemBase {
       frc::Translation2d{-DriveConstants::kWheelBase / 2,
                          -DriveConstants::kTrackWidth / 2}};
     double slowFactor = 0.5;
+
+    // Limelights
+
+  struct velocity2D {double x; double y; double theta;};
+  velocity2D SnapToCoral(std::string direction);
+  bool isSnappedToCoral(std::string direction);
+
  private:
   // Components (e.g. motor controllers and sensors) should generally be
   // declared private and exposed only through public methods.
@@ -163,4 +171,33 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // Odometry class for tracking robot pose
   // 4 defines the number of modules
   frc::SwerveDriveOdometry<4> m_odometry;
+
+  // Limelights
+
+  double DegreeToRad(double degree);
+  frc::PIDController yTranslationPID{0.03, 0.0, 0.0005};
+  frc::PIDController xTranslationPID{0.005, 0.0, 0.0005};
+  frc::PIDController rotationPID{0.01, 0.0, 0.0005};
+  std::map<std::string, double> coralXOffset 
+    {
+        {"LEFT", 12.5}, // TODO: Tune
+        {"RIGHT", -12.5}  // TODO: Tune
+
+    };
+std::map<int, double> coralAngles 
+    {
+        {18, 180.0},
+        {10, 180.0},
+        {17, 240.0},
+        {11, 240.0},
+        {22, 300.0},
+        {6, 300.0},
+        {21, 0.0},
+        {7, 0.0},
+        {20, 60.0},
+        {8, 60.0},
+        {9, 120.0},
+        {19, 120.0}
+    };
+
 };
