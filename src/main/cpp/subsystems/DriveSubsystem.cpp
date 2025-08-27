@@ -278,7 +278,7 @@ DriveSubsystem::velocity2D DriveSubsystem::SnapToCoral(std::string direction) {
 }
 
 bool DriveSubsystem::isSnappedToCoral(std::string direction) {
-  // Returns whether x, y, and theta errors are < 3%
+  // Returns whether x, y, and theta errors are < 10%
 
   int ID = LimelightHelpers::getFiducialID("limelight-intake");
     double absoluteFieldOffset = 0.0; // TODO: Set absolute field offset

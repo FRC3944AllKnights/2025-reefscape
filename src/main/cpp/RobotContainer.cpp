@@ -36,7 +36,7 @@ RobotContainer::RobotContainer() {
   m_chooser.AddOption("One Coral Center Automatic", m_OneCoralCenterAutomatic.get());
   frc::SmartDashboard::PutData("auto modes", &m_chooser);
      
-  // Initialize all of your commands and subsystems here
+  // Initialize all of fyour commands and subsystems here
 
   // Configure the button bindings
   ConfigureButtonBindings();
@@ -52,7 +52,9 @@ RobotContainer::RobotContainer() {
         double x = -frc::ApplyDeadband(m_driverController.GetLeftY(), OIConstants::kDriveDeadband) * speedFactor;
         double y = -frc::ApplyDeadband(m_driverController.GetLeftX(), OIConstants::kDriveDeadband) * speedFactor;
         double theta = -frc::ApplyDeadband(m_driverController.GetRightX(), OIConstants::kDriveDeadband) * speedFactor;
-        frc::SmartDashboard::PutNumber("Speed Factor", speedFactor);
+        
+        m_ElevatorSubsystem.ReportMotors();
+        //frc::SmartDashboard::PutNumber("Speed Factor", speedFactor);
         // Set Limelight LEDs
         /*
         if (LimelightHelpers::getTV("limelight-intake") >= 1.0) { // Target detected intake-side
@@ -75,6 +77,7 @@ RobotContainer::RobotContainer() {
         if (posTheta < 0.0) {
           posTheta += 360;
         }
+        /*
         double allowedError = 0.005;
         double tolerance = 3;
         double error = abs(posTheta - m_drive.GetNormalizedHeading());
@@ -82,10 +85,12 @@ RobotContainer::RobotContainer() {
 
         frc::SmartDashboard::PutBoolean("Limelight: thetaGood", thetaGood);
         frc::SmartDashboard::PutNumber("Limelight Theta Error", error);
-
-        frc::SmartDashboard::PutNumber("tx", LimelightHelpers::getTX("limelight-intake"));
-        frc::SmartDashboard::PutNumber("ty", LimelightHelpers::getTY("limelight-intake"));
-        frc::SmartDashboard::PutNumber("tv", LimelightHelpers::getTV("limelight-intake"));
+        */
+        
+       // TODO: Re-enable these dashboard values
+        //frc::SmartDashboard::PutNumber("tx", LimelightHelpers::getTX("limelight-intake"));
+        //frc::SmartDashboard::PutNumber("ty", LimelightHelpers::getTY("limelight-intake"));
+        //frc::SmartDashboard::PutNumber("tv", LimelightHelpers::getTV("limelight-intake"));
 
 
         // Check for Limelight hijacking
@@ -167,7 +172,7 @@ RobotContainer::RobotContainer() {
         }
 
         // Dashboard
-        frc::SmartDashboard::PutNumber("Elevator Encoder", m_ElevatorSubsystem.getHeight());
+        //frc::SmartDashboard::PutNumber("Elevator Encoder", m_ElevatorSubsystem.getHeight());
 
         // Set speedFactor
         if (m_ElevatorSubsystem.getLevel() > 0 && m_ElevatorSubsystem.getSafetyMode()) {

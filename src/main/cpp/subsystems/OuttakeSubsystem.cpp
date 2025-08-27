@@ -20,7 +20,6 @@ OuttakeSubsystem::OuttakeSubsystem() {
 
 void OuttakeSubsystem::SetOuttakeMotors(bool spinning) {
     // spinning: true = motors moving, false = motors stopped
-    frc::SmartDashboard::PutBoolean("Outtake", spinning);
     if (spinning) {
         m_LeftOuttakeMotor.Set(OuttakeSpeed);
     }
@@ -41,15 +40,18 @@ void OuttakeSubsystem::IntakeCoral() {
 }
 
 bool OuttakeSubsystem::GamePieceDetected(){
-    if (usingColorSensor) {
-        return GamePieceDetectedByColor();
-    }
-    else {
-        return GamePieceDetectedBySwitch();
-    }
+    return false;
+    //double IRval = m_colorSensor.GetIR();
+    //frc::SmartDashboard::PutNumber("IR Sensor", IRval); 
+    //return (IRval > 15.0);
 }
 
 bool OuttakeSubsystem::GamePieceDetectedByColor(){
+    return false;
+    //double IRval = m_colorSensor.GetIR();
+    //frc::SmartDashboard::PutNumber("IR Sensor", IRval); 
+    //return (IRval > 15.0);
+    /*
     double confidence = 0.1;
     frc::Color detectedColor = m_colorSensor.GetColor();
     frc::SmartDashboard::PutNumber("Color R", detectedColor.red);
@@ -60,7 +62,7 @@ bool OuttakeSubsystem::GamePieceDetectedByColor(){
     frc::SmartDashboard::PutNumber("MATCHED R", matchedColor.red);
     frc::SmartDashboard::PutNumber("MATCHED G", matchedColor.green);
     frc::SmartDashboard::PutNumber("MATCHED B", matchedColor.blue);
-
+    
     if (matchedColor == kGamePiece){
         // Check IR sensor too
         frc::SmartDashboard::PutNumber("IR Sensor", m_colorSensor.GetIR()); 
@@ -69,6 +71,7 @@ bool OuttakeSubsystem::GamePieceDetectedByColor(){
     else { 
         return false;
     }
+    */
     
 }
 

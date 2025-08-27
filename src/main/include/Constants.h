@@ -173,6 +173,7 @@ namespace ElevatorConstants{
     constexpr int RightElevatorCANID = 22;
 
     constexpr double ElevatorMaxSpeed = 0.5;
-    constexpr double encoderTiers[] = {0.0, 15.0, 27.0, 54.5, 103.0, 103.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
+    constexpr double encoderTiers[] = {3.0, 15.0, 27.0, 54.5, 103.0, 103.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
+    //constexpr double encoderTiers[] = {0.0, 15.0, 27.0, 62.5, 110.0, 110.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
     constexpr bool allowRaiseElevatorWithCoral = false;    
 }

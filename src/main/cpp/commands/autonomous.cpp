@@ -27,11 +27,9 @@ frc2::CommandPtr autos::DriveForwardAndScore(DriveSubsystem* drive, ElevatorSubs
             // onInit: None
             [drive] {drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});},
             // onExecute: Drive forward
-            [drive] {drive->Drive(0.15_mps, 0_mps, 0_rad_per_s, false, true);
-            frc::SmartDashboard::PutBoolean("Driving in Auto", true);},
+            [drive] {drive->Drive(0.15_mps, 0_mps, 0_rad_per_s, false, true);},
             // onEnd: Stop driving
-            [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
-            frc::SmartDashboard::PutBoolean("Driving in Auto", false);},
+            [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward?
             [drive] {return drive->GetPose().X() >= 2.0_m;}, // 2.032   _m
             // requirements: drive
@@ -92,7 +90,7 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             // onInit: Raise elevator to level 4
             [elevator, drive] {
                 drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);
-                elevator->setElevatorLevel(5);},
+                elevator->setElevatorLevel(4);},
             // onExecute: None
             [elevator, drive] {
                 drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
@@ -102,6 +100,18 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             [elevator] {return elevator->isAtTop();},
             // requirements: elevator
             {elevator}
+        ).ToPtr(),
+                frc2::FunctionalCommand(
+            // onInit: None
+            [drive] {drive->poseOne = drive->GetPose();},
+            // onExecute: Drive forward
+            [drive] {drive->Drive(0.15_mps, 0_mps, 0_rad_per_s, false, true);},
+            // onEnd: Stop driving
+            [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
+            // isFinished: Has it driven forward?
+            [drive] {return drive->GetPose().X() >= drive->poseOne.X() + 0.2_m;},
+            // requirements: drive
+            {drive}
         ).ToPtr(),
         frc2::FunctionalCommand(
             // onInit: set outtake motors to run

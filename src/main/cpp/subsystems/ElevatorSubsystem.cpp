@@ -160,8 +160,8 @@ void ElevatorSubsystem::disableElevator() {
 }
 
 void ElevatorSubsystem::resetElevatorEncoder() {
-    m_LeftEncoder.SetPosition(0.25);
-    m_RightEncoder.SetPosition(0.25);
+    m_LeftEncoder.SetPosition(1.0);
+    m_RightEncoder.SetPosition(1.0);
 }
 
 void ElevatorSubsystem::setSafetyMode(bool mode) {
@@ -171,4 +171,11 @@ void ElevatorSubsystem::setSafetyMode(bool mode) {
 
 bool ElevatorSubsystem::getSafetyMode() {
     return this->safetyMode;
+}
+
+void ElevatorSubsystem::ReportMotors() {
+    frc::SmartDashboard::PutNumber("Left Elevator Encoder", getHeight());
+    frc::SmartDashboard::PutNumber("Left Elevator Current", m_LeftElevatorMotor.GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Right Elevator Current", m_RightElevatorMotor.GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Elevator PID IAccum", m_LeftElevatorPIDController.GetIAccum());
 }

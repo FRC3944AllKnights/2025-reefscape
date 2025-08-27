@@ -132,6 +132,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   struct velocity2D {double x; double y; double theta;};
   velocity2D SnapToCoral(std::string direction);
   bool isSnappedToCoral(std::string direction);
+  frc::Pose2d poseOne; // Used for relative motion from a given pose
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -175,8 +176,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // Limelights
 
   double DegreeToRad(double degree);
-  frc::PIDController yTranslationPID{0.03, 0.0, 0.0005};
-  frc::PIDController xTranslationPID{0.005, 0.0, 0.0005};
+  frc::PIDController yTranslationPID{0.025, 0.0, 0.0005};// 0.03
+  frc::PIDController xTranslationPID{0.012, 0.0, 0.0005};// 0.005
   frc::PIDController rotationPID{0.01, 0.0, 0.0005};
   std::map<std::string, double> coralXOffset 
     {

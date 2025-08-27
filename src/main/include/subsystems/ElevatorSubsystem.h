@@ -39,6 +39,8 @@ public:
      */
     void resetElevatorEncoder();
 
+void ReportMotors();
+
 private:
     int targetLevel = 0;
     double targetHeight = 0;

@@ -84,18 +84,20 @@ class OuttakeSubsystem {
     static SparkMaxConfig& RightOuttakeConfig() {
     static SparkMaxConfig rightOuttakeConfig{};
 
+
+    rightOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
+        .SmartCurrentLimit(20);
     rightOuttakeConfig.Follow(OuttakeConstants::LeftOuttakeCANID, true);
     
     // Copied from left outtake config - KEEP UPDATED
 
-    rightOuttakeConfig.SetIdleMode(SparkBaseConfig::IdleMode::kBrake)
-        .SmartCurrentLimit(20);
+    /*
     rightOuttakeConfig.closedLoop
         .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
         // These are example gains you may need to them for your own robot!
         .Pid(1, 0, 0)
         .OutputRange(-1, 1);
-
+    */
     return rightOuttakeConfig;
   }
 };
