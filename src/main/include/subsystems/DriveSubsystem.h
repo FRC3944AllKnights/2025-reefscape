@@ -133,6 +133,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   velocity2D SnapToCoral(std::string direction);
   bool isSnappedToCoral(std::string direction);
   frc::Pose2d poseOne; // Used for relative motion from a given pose
+  velocity2D DriveStraightForward();
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

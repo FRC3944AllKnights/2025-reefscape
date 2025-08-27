@@ -134,6 +134,14 @@ RobotContainer::RobotContainer() {
             theta = velocities.theta;
           }
         }
+
+        else if (POVReading == 0) {
+          // Command: Drive straight forward, robot-relative
+          DriveSubsystem::velocity2D velocities = m_drive.DriveStraightForward();
+          x = velocities.x;
+          y = velocities.y;
+          theta = velocities.theta;
+        }
         
         // Apply calculated velocities (drive)
         if (m_driverController.GetXButton()) {

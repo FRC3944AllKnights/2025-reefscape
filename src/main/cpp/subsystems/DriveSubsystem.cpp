@@ -297,3 +297,13 @@ bool DriveSubsystem::isSnappedToCoral(std::string direction) {
 double DriveSubsystem::DegreeToRad(double degree){
     return degree*3.14159/180;
 }
+
+DriveSubsystem::velocity2D DriveSubsystem::DriveStraightForward() {
+  // Returns velocities to drive straight forward, robot-relative
+  velocity2D velocities;
+  const double speedFactor = 0.1;
+  velocities.x += speedFactor * cos(DegreeToRad(GetNormalizedHeading()));
+  velocities.y += speedFactor * sin(DegreeToRad(GetNormalizedHeading()));
+  velocities.theta = 0.0;
+  return velocities;
+}
