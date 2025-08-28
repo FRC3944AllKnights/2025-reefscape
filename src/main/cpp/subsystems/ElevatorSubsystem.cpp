@@ -160,8 +160,8 @@ void ElevatorSubsystem::disableElevator() {
 }
 
 void ElevatorSubsystem::resetElevatorEncoder() {
-    m_LeftEncoder.SetPosition(1.0);
-    m_RightEncoder.SetPosition(1.0);
+    m_LeftEncoder.SetPosition(3.0);
+    m_RightEncoder.SetPosition(3.0);
 }
 
 void ElevatorSubsystem::setSafetyMode(bool mode) {

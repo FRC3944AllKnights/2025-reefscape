@@ -163,7 +163,7 @@ namespace OuttakeConstants {
     constexpr int LeftOuttakeCANID = 19;
     constexpr int RightOuttakeCANID = 20;
     constexpr double IntakeSpeed = 0.1;
-    constexpr double OuttakeSpeed = 0.15;
+    constexpr double OuttakeSpeed = 0.10; // 0.15 when not used as intake
 }
 
 namespace ElevatorConstants{

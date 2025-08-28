@@ -100,12 +100,15 @@ RobotContainer::RobotContainer() {
           // Command: Auto-align outtake-side (right)
           if (intakeButton) {
             rotationPID.EnableContinuousInput(0,360);
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 54);
+            /*
             if (frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue) {
               theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 54);
             }
             else {
               theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 234);
             }
+            */
           }
           // if a valid apriltag is detected, run SnapToCoral logic
           else if (LimelightHelpers::getTV("limelight-intake")) {
@@ -120,12 +123,15 @@ RobotContainer::RobotContainer() {
           // Command: Auto-align outtake-side (left)
           if (intakeButton) {
             rotationPID.EnableContinuousInput(0,360);
+            theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 306);
+            /*
             if (frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue) {
               theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 306);
             }
             else {
               theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), 126);
             }
+            */
           }
           else if (LimelightHelpers::getTV("limelight-intake")) {
             velocity2D velocities = SnapToCoral("LEFT");
