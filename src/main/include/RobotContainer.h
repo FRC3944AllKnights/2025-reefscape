@@ -55,6 +55,7 @@ class RobotContainer {
 
   // The chooser for the autonomous routines
   frc::SendableChooser<frc2::Command*> m_chooser;
+  frc::SendableChooser<frc2::Command*> autoChooser; // Chooser for PathPlanner
   //frc::SendableChooser<frc2::CommandPtr> autoChooser;
 
   bool thetaGood = false; //error < tolerance;

@@ -44,6 +44,7 @@ DriveSubsystem::DriveSubsystem()
                  frc::Pose2d{}} {
 
     // Configure the AutoBuilder last
+    RobotConfig config = RobotConfig::fromGUISettings();
     AutoBuilder::configure(
         [this](){ return GetPose(); }, // Robot pose supplier
         [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)

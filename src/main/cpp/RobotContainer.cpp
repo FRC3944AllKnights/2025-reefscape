@@ -31,10 +31,14 @@ using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
   
+  
   m_chooser.SetDefaultOption("Drive Forward", m_DriveForward.get());
   m_chooser.AddOption("Drive Forward And Score", m_DriveForwardAndScore.get());
   m_chooser.AddOption("One Coral Center Automatic", m_OneCoralCenterAutomatic.get());
   frc::SmartDashboard::PutData("auto modes", &m_chooser);
+  
+  autoChooser = AutoBuilder::buildAutoChooser(); // TODO: The Offending Line
+  //frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
      
   // Initialize all of fyour commands and subsystems here
 
@@ -301,6 +305,7 @@ void RobotContainer::ConfigureButtonBindings() {
 frc2::Command* RobotContainer::getAutonomousCommand() {
   // Returns a frc2::Command* that is freed at program termination
   return m_chooser.GetSelected();
+  //return autoChooser.GetSelected();
 }
 
 double RobotContainer::DegreeToRad(double degree){

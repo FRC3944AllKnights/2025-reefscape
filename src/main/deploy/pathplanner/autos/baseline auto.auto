@@ -7,13 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "drive forward"
+            "pathName": "DriveForward"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Autons",
   "choreoAuto": false
 }
