@@ -43,9 +43,11 @@ void Robot::DisabledInit() {}
 
 void Robot::DisabledPeriodic() {
   m_container.absoluteFieldOffset = 0.0; //default to red alliance, assume we're facing front toward the driver station
+  m_container.m_drive.absoluteFieldOffset = 0.0;
   if(frc::DriverStation::GetAlliance().value() == frc::DriverStation::Alliance::kBlue)
   {
     m_container.absoluteFieldOffset = 180.0;
+    m_container.m_drive.absoluteFieldOffset = 180.0;
   }
 }
 

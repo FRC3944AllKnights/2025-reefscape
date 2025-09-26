@@ -134,6 +134,7 @@ class DriveSubsystem : public frc2::SubsystemBase {
   bool isSnappedToCoral(std::string direction);
   frc::Pose2d poseOne; // Used for relative motion from a given pose
   velocity2D DriveStraightForward();
+  double absoluteFieldOffset;
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -182,8 +183,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::PIDController rotationPID{0.01, 0.0, 0.0005};
   std::map<std::string, double> coralXOffset 
     {
-        {"LEFT", 12.5}, // TODO: Tune
-        {"RIGHT", -12.5}  // TODO: Tune
+        {"LEFT", 14.25}, // TODO: Tune
+        {"RIGHT", -14.25}  // TODO: Tune
 
     };
 std::map<int, double> coralAngles 

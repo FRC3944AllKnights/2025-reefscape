@@ -262,7 +262,6 @@ DriveSubsystem::velocity2D DriveSubsystem::SnapToCoral(std::string direction) {
     }
 
     int ID = LimelightHelpers::getFiducialID("limelight-intake");
-    double absoluteFieldOffset = 180.0; // TODO: Set absolute field offset
     double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
     if (posTheta < 0.0) {
       posTheta += 360;
@@ -282,7 +281,6 @@ bool DriveSubsystem::isSnappedToCoral(std::string direction) {
   // Returns whether x, y, and theta errors are < 10%
 
   int ID = LimelightHelpers::getFiducialID("limelight-intake");
-    double absoluteFieldOffset = 0.0; // TODO: Set absolute field offset
     double posTheta = coralAngles[ID] - absoluteFieldOffset; //convert from absolute field angles to angles relative to the robot starting pose
     if (posTheta < 0.0) {
       posTheta += 360;
@@ -292,7 +290,7 @@ bool DriveSubsystem::isSnappedToCoral(std::string direction) {
   double errorY = abs((LimelightHelpers::getTY("limelight-intake") - desiredPosYOuttake) / desiredPosYOuttake);
   //double errorTheta = abs((GetNormalizedHeading() - posTheta)) / posTheta;
 
-  return (errorX < 0.1 && errorY < 0.1);// && errorTheta < 0.1);
+  return (errorX < 0.05 && errorY < 0.05);// && errorTheta < 0.1);
 }
 
 double DriveSubsystem::DegreeToRad(double degree){

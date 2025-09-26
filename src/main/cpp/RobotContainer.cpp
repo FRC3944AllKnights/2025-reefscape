@@ -31,13 +31,12 @@ using namespace pathplanner;
 
 RobotContainer::RobotContainer() {
   
-  
-  m_chooser.SetDefaultOption("Drive Forward", m_DriveForward.get());
+  m_chooser.SetDefaultOption("One Coral Center Automatic", m_OneCoralCenterAutomatic.get());
+  m_chooser.AddOption("Drive Forward", m_DriveForward.get());
   m_chooser.AddOption("Drive Forward And Score", m_DriveForwardAndScore.get());
-  m_chooser.AddOption("One Coral Center Automatic", m_OneCoralCenterAutomatic.get());
   frc::SmartDashboard::PutData("auto modes", &m_chooser);
   
-  autoChooser = AutoBuilder::buildAutoChooser(); // TODO: The Offending Line
+  //autoChooser = AutoBuilder::buildAutoChooser(); // TODO: The Offending Line
   //frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
      
   // Initialize all of fyour commands and subsystems here
@@ -152,6 +151,14 @@ RobotContainer::RobotContainer() {
           y = velocities.y;
           theta = velocities.theta;
         }
+
+        else if (POVReading == 180) {
+          // Command: Drive straight backward, robot-relative
+          DriveSubsystem::velocity2D velocities = m_drive.DriveStraightForward();
+          x = -velocities.x;
+          y = -velocities.y;
+          theta = velocities.theta;
+        }
         
         // Apply calculated velocities (drive)
         if (m_driverController.GetXButton()) {
@@ -210,10 +217,14 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
       return velocities;
     }
     
-    velocities.x += xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * sin(DegreeToRad(posTheta));
-    velocities.y += xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * cos(DegreeToRad(posTheta));
-    velocities.x += -yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
-    velocities.y += -yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake) *sin(DegreeToRad(posTheta));
+    double xTranslationRobotRelative = xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]);
+    velocities.x += xTranslationRobotRelative * sin(DegreeToRad(posTheta));
+    velocities.y += xTranslationRobotRelative * cos(DegreeToRad(posTheta));
+
+    double yTranslationRobotRelative = yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake);
+    velocities.x += -yTranslationRobotRelative * cos(DegreeToRad(posTheta));
+    velocities.y += -yTranslationRobotRelative * sin(DegreeToRad(posTheta));
+
     rotationPID.EnableContinuousInput(0,360);
     velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
     

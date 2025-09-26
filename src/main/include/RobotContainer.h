@@ -33,6 +33,7 @@ class RobotContainer {
  public:
   RobotContainer();
   double absoluteFieldOffset;
+  DriveSubsystem m_drive; // TODO: Move back to private
 
   frc2::Command* getAutonomousCommand();
 
@@ -48,7 +49,6 @@ class RobotContainer {
   velocity2D SnapToCoral(std::string direction);
 
   // The robot's subsystems
-  DriveSubsystem m_drive;
   OuttakeSubsystem m_OuttakeSubsystem;
   ClimberSubsystem m_ClimberSubsystem;
   ElevatorSubsystem m_ElevatorSubsystem;
@@ -86,8 +86,8 @@ class RobotContainer {
 
   std::map<std::string, double> coralXOffset 
     {
-        {"LEFT", 12.5}, // TODO: Tune
-        {"RIGHT", -12.5}  // TODO: Tune
+        {"LEFT", 14.25}, // TODO: Tune
+        {"RIGHT", -14.25}  // TODO: Tune
 
     };
 

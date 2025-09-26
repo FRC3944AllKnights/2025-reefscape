@@ -41,7 +41,7 @@ void OuttakeSubsystem::IntakeCoral() {
 
 bool OuttakeSubsystem::GamePieceDetected(){
     double IRval = m_colorSensor.GetIR();
-    frc::SmartDashboard::PutNumber("IR Sensor", IRval);
+    //frc::SmartDashboard::PutNumber("IR Sensor", IRval);
     return (IRval > 50.0);
 }
 

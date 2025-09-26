@@ -60,7 +60,7 @@ constexpr int kRearRightTurningCanId = 8;
 
 // Limelight constants
 constexpr double desiredPosYIntake = 13.0; // TODO: Tune
-constexpr double desiredPosYOuttake = -10.7; //-12.0;
+constexpr double desiredPosYOuttake = -10.0; //-12.0;
 }  // namespace DriveConstants
 
 namespace ModuleConstants {
@@ -162,8 +162,8 @@ namespace OuttakeConstants {
     // SPARK MAX CAN IDs
     constexpr int LeftOuttakeCANID = 19;
     constexpr int RightOuttakeCANID = 20;
-    constexpr double IntakeSpeed = 0.1;
-    constexpr double OuttakeSpeed = 0.10; // 0.15 when not used as intake
+    constexpr double IntakeSpeed = 0.08;
+    constexpr double OuttakeSpeed = 0.1; // 0.15 when not used as intake
 }
 
 namespace ElevatorConstants{
@@ -173,7 +173,7 @@ namespace ElevatorConstants{
     constexpr int RightElevatorCANID = 22;
 
     constexpr double ElevatorMaxSpeed = 0.5;
-    constexpr double encoderTiers[] = {3.0, 15.0, 27.0, 54.5, 103.0, 103.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
+    constexpr double encoderTiers[] = {1.5, 15.0, 27.0, 59.0, 103.0, 103.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
     //constexpr double encoderTiers[] = {0.0, 15.0, 27.0, 62.5, 110.0, 110.0}; // Lvl 0: Minimum height, lvl 5: Maximum height
     constexpr bool allowRaiseElevatorWithCoral = false;    
 }
