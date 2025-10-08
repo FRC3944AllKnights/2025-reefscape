@@ -113,6 +113,9 @@ double ElevatorSubsystem::getHeight() {
 bool ElevatorSubsystem::isAtTop() {
     return getHeight() > 0.98 * encoderTiers[5];
 }
+bool ElevatorSubsystem::isAtBottom() {
+    return getHeight() < 0.03 * encoderTiers[5];
+}
 
 int ElevatorSubsystem::getTargetLevel() {
     return targetLevel;
