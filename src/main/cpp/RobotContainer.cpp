@@ -212,6 +212,14 @@ RobotContainer::RobotContainer() {
 
 RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
     velocity2D velocities;
+    /*
+    DriveSubsystem::velocity2D velocities_drive = m_drive.SnapToCoral(direction);
+    velocities.x = velocities_drive.x;
+    velocities.y = velocities_drive.y;
+    velocities.theta = velocities_drive.theta;
+    return velocities;
+    */
+
 
     if (LimelightHelpers::getTV("limelight-intake") == 0) {
       return velocities;
@@ -232,6 +240,7 @@ RobotContainer::velocity2D RobotContainer::SnapToCoral(std::string direction) {
     velocities.theta = rotationPID.Calculate(m_drive.GetNormalizedHeading(), posTheta);
     
     return velocities;
+    
 }
 
 void RobotContainer::ConfigureButtonBindings() {

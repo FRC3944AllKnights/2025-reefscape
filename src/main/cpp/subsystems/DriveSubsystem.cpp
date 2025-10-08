@@ -267,14 +267,22 @@ DriveSubsystem::velocity2D DriveSubsystem::SnapToCoral(std::string direction) {
       posTheta += 360;
     }
     
-    velocities.x += -xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * sin(DegreeToRad(posTheta));
-    velocities.y += -xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]) * cos(DegreeToRad(posTheta));
-    velocities.x += yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake)*cos(DegreeToRad(posTheta));
-    velocities.y += yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake) *sin(DegreeToRad(posTheta));
+    // Side-to-side robot-relative correction
+    double xTranslationRobotRelative = xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]);
+    velocities.x -= xTranslationRobotRelative * sin(DegreeToRad(posTheta));
+    velocities.y -= xTranslationRobotRelative * cos(DegreeToRad(posTheta));
+    
+    // Forward-backward robot-relative correction
+    double yTranslationRobotRelative = yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake);
+    velocities.x -= yTranslationRobotRelative * cos(DegreeToRad(posTheta));
+    velocities.y -= yTranslationRobotRelative * sin(DegreeToRad(posTheta));
+    
+    // Rotational correction
     rotationPID.EnableContinuousInput(0,360);
     velocities.theta = rotationPID.Calculate(GetNormalizedHeading(), posTheta);
     
-    return velocities;
+    reportLimelight(direction, posTheta);
+    return velocities;;
 }
 
 bool DriveSubsystem::isSnappedToCoral(std::string direction) {
@@ -293,6 +301,14 @@ bool DriveSubsystem::isSnappedToCoral(std::string direction) {
   return (errorX < 0.05 && errorY < 0.05);// && errorTheta < 0.1);
 }
 
+void DriveSubsystem::reportLimelight(std::string direction, double posTheta) {
+  frc::SmartDashboard::PutNumber("tx", LimelightHelpers::getTX("limelight-intake"));
+  frc::SmartDashboard::PutNumber("ty", LimelightHelpers::getTY("limelight-intake"));
+  frc::SmartDashboard::PutNumber("theta", GetNormalizedHeading());
+  frc::SmartDashboard::PutNumber("target x", coralXOffset[direction]);
+  frc::SmartDashboard::PutNumber("target y", desiredPosYOuttake);
+  frc::SmartDashboard::PutNumber("posTheta", posTheta);
+}
 double DriveSubsystem::DegreeToRad(double degree){
     return degree*3.14159/180;
 }

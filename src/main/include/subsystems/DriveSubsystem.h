@@ -18,6 +18,7 @@
 
 #include "Constants.h"
 #include "MAXSwerveModule.h"
+#include <frc/Timer.h>
 
 class DriveSubsystem : public frc2::SubsystemBase {
  public:
@@ -132,9 +133,11 @@ class DriveSubsystem : public frc2::SubsystemBase {
   struct velocity2D {double x; double y; double theta;};
   velocity2D SnapToCoral(std::string direction);
   bool isSnappedToCoral(std::string direction);
+  void reportLimelight(std::string direction, double posTheta);
   frc::Pose2d poseOne; // Used for relative motion from a given pose
   velocity2D DriveStraightForward();
   double absoluteFieldOffset;
+  frc::Timer m_autonTimer;
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

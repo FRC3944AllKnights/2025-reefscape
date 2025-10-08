@@ -10,6 +10,7 @@
 #include <rev/SparkRelativeEncoder.h>
 #include <frc/AddressableLED.h>
 #include "frc/DigitalInput.h"
+#include "frc/Timer.h"
 
 #include "Constants.h"
 
@@ -24,7 +25,9 @@ public:
     void SetColorLEDCoralDetected(int R, int G, int B);
     void SetColorLEDIntakeTargetDetected(int R, int G, int B);
     void SetColorLEDOuttakeTargetDetected(int R, int G, int B);
+    void resetIRSensor();
     bool usingColorSensor = true; // True: Color sensor. False: Limit switch(es)
+    frc::Timer m_autonTimer;
 
 private:
     bool GamePieceDetectedByColor();
@@ -50,6 +53,7 @@ private:
     rev::ColorMatch m_colorMatcher;
     frc::Color kGamePiece = frc::Color(0.37, 0.47, 0.16);
     frc::Color kBackGround = frc::Color(0.56, 0.36, 0.08);
+
    
     // LEDs
     // PWM port 9

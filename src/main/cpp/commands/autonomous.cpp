@@ -69,7 +69,10 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
     return frc2::cmd::Sequence(
         frc2::FunctionalCommand(
             // onInit: None
-            [drive] {drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});},
+            [drive] {
+                drive->ResetOdometry(frc::Pose2d{0_m, 0_m, 0_deg});
+                drive->m_autonTimer.Restart();  
+            },
             // onExecute: Auto align to coral
             [drive] {
                 DriveSubsystem::velocity2D velocities = drive->SnapToCoral("RIGHT");
@@ -82,7 +85,9 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             // onEnd: Stop driving
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward?
-            [drive] {return drive->isSnappedToCoral("RIGHT");},
+            [drive] {
+                return (drive->isSnappedToCoral("RIGHT") || drive->m_autonTimer.Get() > 8_s);
+                },
             // requirements: drive
             {drive}
         ).ToPtr(),
@@ -101,7 +106,8 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             // requirements: elevator
             {elevator}
         ).ToPtr(),
-                frc2::FunctionalCommand(
+        // Drive forward in X (does not work for side starting position)
+        frc2::FunctionalCommand(
             // onInit: None
             [drive] {drive->poseOne = drive->GetPose();},
             // onExecute: Drive forward
@@ -114,15 +120,40 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             {drive}
         ).ToPtr(),
         frc2::FunctionalCommand(
+            // onInit: None
+            [drive] {drive->poseOne = drive->GetPose();},
+            // onExecute: Drive forward, robot-relative
+            [drive] {
+                DriveSubsystem::velocity2D velocities = drive->DriveStraightForward();
+                drive->Drive(
+                    units::velocity::meters_per_second_t {velocities.x},
+                    units::velocity::meters_per_second_t {velocities.y},
+                    units::radians_per_second_t {velocities.theta},
+                    false, true);},
+            // onEnd: Stop driving
+            [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
+            // isFinished: Has it driven forward 0.2m?
+            [drive] {
+                // This is the distance equation, using the point on the field the elevator fully raised as the origin
+                auto x = drive->GetPose().X() - drive->poseOne.X();
+                auto y = drive->GetPose().Y() - drive->poseOne.Y();
+                return (x*x + y*y) >= (0.2_m * 0.2_m);
+                },
+            // requirements: drive
+            {drive}
+        ).ToPtr(),
+        frc2::FunctionalCommand(
             // onInit: set outtake motors to run
-            [outtake] {outtake->SetOuttakeMotors(true);},
+            [outtake] {
+                outtake->SetOuttakeMotors(true);
+                outtake->m_autonTimer.Restart();},
             // onExecute: None
             [outtake] {;},
             // onEnd: None
-            [outtake](bool interrupted) {;},
+            [outtake](bool interrupted) {outtake->SetOuttakeMotors(false);},
             // isFinished: is the coral out of the robot?
-            [outtake] {return true;},
-            // requirements: intake
+            [outtake] {return outtake->m_autonTimer.Get() > 3_s;},
+            // requirements: outtake
             {outtake}
         ).ToPtr()
     );
