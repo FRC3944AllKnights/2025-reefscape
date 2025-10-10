@@ -33,7 +33,6 @@ RobotContainer::RobotContainer() {
   
   m_chooser.SetDefaultOption("One Coral Center Automatic", m_OneCoralCenterAutomatic.get());
   m_chooser.AddOption("Drive Forward", m_DriveForward.get());
-  m_chooser.AddOption("Drive Forward And Score", m_DriveForwardAndScore.get());
   frc::SmartDashboard::PutData("auto modes", &m_chooser);
   
   //autoChooser = AutoBuilder::buildAutoChooser(); // TODO: The Offending Line

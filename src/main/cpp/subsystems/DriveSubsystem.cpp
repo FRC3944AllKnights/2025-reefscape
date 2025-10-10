@@ -269,13 +269,13 @@ DriveSubsystem::velocity2D DriveSubsystem::SnapToCoral(std::string direction) {
     
     // Side-to-side robot-relative correction
     double xTranslationRobotRelative = xTranslationPID.Calculate(LimelightHelpers::getTX("limelight-intake"), coralXOffset[direction]);
-    velocities.x -= xTranslationRobotRelative * sin(DegreeToRad(posTheta));
-    velocities.y -= xTranslationRobotRelative * cos(DegreeToRad(posTheta));
+    velocities.x += -xTranslationRobotRelative * sin(DegreeToRad(posTheta));
+    velocities.y += xTranslationRobotRelative * cos(DegreeToRad(posTheta));
     
     // Forward-backward robot-relative correction
     double yTranslationRobotRelative = yTranslationPID.Calculate(LimelightHelpers::getTY("limelight-intake"), desiredPosYOuttake);
-    velocities.x -= yTranslationRobotRelative * cos(DegreeToRad(posTheta));
-    velocities.y -= yTranslationRobotRelative * sin(DegreeToRad(posTheta));
+    velocities.x += -yTranslationRobotRelative * cos(DegreeToRad(posTheta));
+    velocities.y += -yTranslationRobotRelative * sin(DegreeToRad(posTheta));
     
     // Rotational correction
     rotationPID.EnableContinuousInput(0,360);

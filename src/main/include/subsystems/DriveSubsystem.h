@@ -138,6 +138,11 @@ class DriveSubsystem : public frc2::SubsystemBase {
   velocity2D DriveStraightForward();
   double absoluteFieldOffset;
   frc::Timer m_autonTimer;
+  double autonTargetAngle = 0.0;
+
+  frc::PIDController yTranslationPID{0.015, 0.0, 0.0005};// 0.025, 0, 0.0005
+  frc::PIDController xTranslationPID{0.015, 0.0, 0.0005};
+  frc::PIDController rotationPID{0.005, 0.0, 0.0005}; // 0.01, 0.0, 0.0005
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -181,9 +186,6 @@ class DriveSubsystem : public frc2::SubsystemBase {
   // Limelights
 
   double DegreeToRad(double degree);
-  frc::PIDController yTranslationPID{0.025, 0.0, 0.0005};// 0.03
-  frc::PIDController xTranslationPID{0.012, 0.0, 0.0005};// 0.005
-  frc::PIDController rotationPID{0.01, 0.0, 0.0005};
   std::map<std::string, double> coralXOffset 
     {
         {"LEFT", 14.25}, // TODO: Tune

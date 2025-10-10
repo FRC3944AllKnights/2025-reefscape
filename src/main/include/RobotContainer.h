@@ -61,7 +61,6 @@ class RobotContainer {
   bool thetaGood = false; //error < tolerance;
   double posTheta;
   frc2::CommandPtr m_DriveForward = autos::DriveForward(&m_drive);
-  frc2::CommandPtr m_DriveForwardAndScore = autos::DriveForwardAndScore(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
   frc2::CommandPtr m_OneCoralCenterAutomatic = autos::OneCoralCenterAutomatic(&m_drive, &m_ElevatorSubsystem, &m_OuttakeSubsystem);
 
   frc::PIDController yTranslationPID{0.025, 0.0, 0.0005};// 0.03
