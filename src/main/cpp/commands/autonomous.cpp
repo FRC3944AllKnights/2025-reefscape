@@ -42,7 +42,7 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward?
             [drive] {
-                return (drive->isSnappedToCoral("RIGHT") || drive->m_autonTimer.Get() > 7_s);
+                return (drive->isSnappedToCoral("RIGHT") || drive->m_autonTimer.Get() > 10_s);
                 },
             // requirements: drive
             {drive}
@@ -76,18 +76,27 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             [drive](bool interrupted) {drive->Drive(0_mps, 0_mps, 0_rad_per_s, false, true);},
             // isFinished: Has it driven forward enough?
             [drive] {
-                return drive->GetPose().X() >= drive->poseOne.X() + 0.080_m;
+                return (drive->GetPose().X() >= drive->poseOne.X() + 0.12_m);
                 },
             // requirements: drive
             {drive}
         ).ToPtr(),
         frc2::FunctionalCommand(
             // onInit: set outtake motors to run
-            [outtake] {
-                outtake->SetOuttakeMotors(true);
-                outtake->m_autonTimer.Restart();},
+            [outtake, drive] {
+                if ((drive->GetPose().X() >= drive->poseOne.X() + 0.12_m)) {
+                    outtake->SetOuttakeMotors(true);
+                    outtake->m_autonTimer.Restart();
+                }
+                },
             // onExecute: None
-            [outtake] {;},
+            [outtake, drive] {
+                if (!outtake->autonHasStartedOuttake && (drive->GetPose().X() >= drive->poseOne.X() + 0.12_m)) {
+                    outtake->SetOuttakeMotors(true);
+                    outtake->m_autonTimer.Restart();
+                }
+                frc::SmartDashboard::PutNumber("Outtake Auton Timer", outtake->m_autonTimer.Get().value());
+                },
             // onEnd: None
             [outtake](bool interrupted) {outtake->SetOuttakeMotors(false);},
             // isFinished: is the coral out of the robot?
@@ -116,7 +125,7 @@ frc2::CommandPtr autos::OneCoralCenterAutomatic(DriveSubsystem* drive, ElevatorS
             // onExecute: Drive backward, robot-relative
             [drive] {
                 drive->Drive(
-                    units::velocity::meters_per_second_t {-0.5_mps},
+                    units::velocity::meters_per_second_t {-0.25_mps},
                     units::velocity::meters_per_second_t {0.0_mps},
                     units::radians_per_second_t {0.0_rad_per_s},
                     false, true);},

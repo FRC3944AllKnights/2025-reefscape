@@ -140,8 +140,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   frc::Timer m_autonTimer;
   double autonTargetAngle = 0.0;
 
-  frc::PIDController yTranslationPID{0.015, 0.0, 0.0005};// 0.025, 0, 0.0005
-  frc::PIDController xTranslationPID{0.015, 0.0, 0.0005};
+  frc::PIDController yTranslationPID{0.0185, 0.0, 0.0005};// 0.025, 0, 0.0005
+  frc::PIDController xTranslationPID{0.0185, 0.0, 0.0005};
   frc::PIDController rotationPID{0.005, 0.0, 0.0005}; // 0.01, 0.0, 0.0005
 
  private:
@@ -188,8 +188,8 @@ class DriveSubsystem : public frc2::SubsystemBase {
   double DegreeToRad(double degree);
   std::map<std::string, double> coralXOffset 
     {
-        {"LEFT", 14.25}, // TODO: Tune
-        {"RIGHT", -14.25}  // TODO: Tune
+        {"LEFT", 13.75}, // TODO: Tune
+        {"RIGHT", -13.75}  // TODO: Tune
 
     };
 std::map<int, double> coralAngles 

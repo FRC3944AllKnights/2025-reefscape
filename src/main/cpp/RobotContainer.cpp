@@ -200,7 +200,7 @@ RobotContainer::RobotContainer() {
 
         // Set speedFactor
         if (m_ElevatorSubsystem.getLevel() > 0 && m_ElevatorSubsystem.getSafetyMode()) {
-          speedFactor = 0.25;
+          speedFactor = 0.5;
         }
         else {
           speedFactor = 1.0;

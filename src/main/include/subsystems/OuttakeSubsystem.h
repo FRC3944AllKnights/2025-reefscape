@@ -28,6 +28,7 @@ public:
     void resetIRSensor();
     bool usingColorSensor = true; // True: Color sensor. False: Limit switch(es)
     frc::Timer m_autonTimer;
+    bool autonHasStartedOuttake = false;
 
 private:
     bool GamePieceDetectedByColor();
